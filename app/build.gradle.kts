@@ -22,12 +22,16 @@ android {
     }
 
     buildTypes {
+        debug {
+            buildConfigField("String", "BASE_PICS_SUM_URL", "\"https://picsum.photos/\"")
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            buildConfigField("String", "BASE_PICS_SUM_URL", "\"https://picsum.photos/\"")
         }
     }
     compileOptions {
@@ -39,6 +43,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.15"
@@ -95,6 +100,9 @@ dependencies {
     implementation(libs.hilt.navigation.compose)
     implementation(libs.hilt.work)
     ksp(libs.hilt.compiler)
+
+    // Work
+    implementation(libs.work.runtime)
 
     // Image
     implementation(libs.coil)
