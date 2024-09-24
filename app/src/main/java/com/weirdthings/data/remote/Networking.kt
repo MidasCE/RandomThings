@@ -1,23 +1,23 @@
 package com.weirdthings.data.remote
 
-import com.weirdthings.BuildConfig
+import com.squareup.moshi.Moshi
 import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
-import java.util.concurrent.TimeUnit
+import retrofit2.Retrofit
+import retrofit2.converter.moshi.MoshiConverterFactory
 
 object Networking {
 
     private const val NETWORK_CALL_TIMEOUT = 15
 
-    fun createOkHttpClientForNinjaImage(
-    ) = OkHttpClient.Builder()
-        .addInterceptor(
-            HttpLoggingInterceptor()
-            .apply {
-                level = if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BASIC
-                else HttpLoggingInterceptor.Level.NONE
-            })
-        .readTimeout(NETWORK_CALL_TIMEOUT.toLong(), TimeUnit.SECONDS)
-        .writeTimeout(NETWORK_CALL_TIMEOUT.toLong(), TimeUnit.SECONDS)
-        .build()
+    fun <T> createService(baseUrl: String, client: OkHttpClient, service: Class<T>): T =
+        Retrofit.Builder()
+            .baseUrl(baseUrl)
+            .client(client)
+            .addConverterFactory(
+                MoshiConverterFactory.create(
+                    Moshi.Builder().build()
+                )
+            )
+            .build()
+            .create(service)
 }

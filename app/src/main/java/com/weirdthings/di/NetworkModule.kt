@@ -3,6 +3,8 @@ package com.weirdthings.di
 import android.content.Context
 import coil.ImageLoader
 import com.weirdthings.BuildConfig
+import com.weirdthings.data.remote.Networking
+import com.weirdthings.data.remote.apis.PicSumApi
 import com.weirdthings.di.qualifier.BasePicsSumUrl
 import dagger.Module
 import dagger.Provides
@@ -28,6 +30,17 @@ class NetworkModule {
         @ApplicationContext context: Context,
     ): ImageLoader = ImageLoader.Builder(context)
         .build()
+
+    @Provides
+    @Singleton
+    fun providePicSumApi(
+        @BasePicsSumUrl basePicsSumUrl: String,
+        okHttpClient: OkHttpClient
+    ): PicSumApi = Networking.createService(
+        basePicsSumUrl,
+        okHttpClient,
+        PicSumApi::class.java
+    )
 
     @Provides
     @Singleton
