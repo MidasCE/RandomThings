@@ -8,6 +8,6 @@ interface PicSumApi {
 
     @GET(Endpoints.IMAGE_INFO)
     suspend fun getImageInfo(
-        @Path("id") contentId: String,
+        @Path("id") imageId: Int,
     ): ImageInfo
 }

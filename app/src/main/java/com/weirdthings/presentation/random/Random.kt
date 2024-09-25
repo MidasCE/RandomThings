@@ -14,23 +14,22 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.weirdthings.BuildConfig
 import com.weirdthings.presentation.common.NetworkRandomImage
+import com.weirdthings.presentation.loader.LoadingView
 import com.weirdthings.presentation.preview.ImageUrlPreviewParameterProvider
 import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
 @Composable
-fun RandomScreen(
-    modifier: Modifier = Modifier) {
+fun RandomScreen(modifier: Modifier = Modifier, viewModel: RandomThingViewModel) {
+    LoadingView(loading = viewModel.randomImagesInfo.isEmpty())
     Column (
         modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        NetworkRandomImage(
-            url = BuildConfig.BASE_PICS_SUM_URL + "512",
-            contentDescription = null,
+        RandomThingItem(
+            item = viewModel.randomImagesInfo[0],
             modifier = Modifier.fillMaxWidth().height(240.dp),
         )
-        Text("DESCRIPTION")
     }
 }
 
@@ -42,11 +41,6 @@ private fun RandomScreenPreview() {
         verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        NetworkRandomImage(
-            url = BuildConfig.BASE_PICS_SUM_URL + "512",
-            contentDescription = null,
-            modifier = Modifier.fillMaxWidth().height(240.dp),
-        )
         Text("DESCRIPTION")
     }
 }

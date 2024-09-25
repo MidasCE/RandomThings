@@ -11,7 +11,7 @@ class ImageRepository @Inject constructor(
 ) {
 
     suspend fun getImageInfo(
-        imageId: String,
+        imageId: Int,
     ): Flow<com.weirdthings.data.entity.ImageInfo> =
         flow {
             emit(picSumApi.getImageInfo(imageId))
