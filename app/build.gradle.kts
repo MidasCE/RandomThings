@@ -8,11 +8,11 @@ plugins {
 }
 
 android {
-    namespace = "com.weirdthings"
+    namespace = "com.randomthings"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.weirdthings"
+        applicationId = "com.randomthings"
         minSdk = 24
         targetSdk = 34
         versionCode = 1

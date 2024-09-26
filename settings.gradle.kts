@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "WeirdThings"
+rootProject.name = "RandomThings"
 include(":app")
  
