@@ -1,5 +1,6 @@
 package com.weirdthings.presentation.random
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import com.weirdthings.data.entity.ImageInfo
 import com.weirdthings.data.repository.ImageRepository
@@ -30,8 +31,8 @@ class RandomThingViewModel @Inject constructor(
         val randomId = (0..MAX_IMAGE_INDEX).random()
         launchNetwork() {
             imageRepository.getImageInfo(randomId)
-                .catch {
-                    throw it
+                .collect {
+                    _randomImagesInfo.add(it)
                 }
         }
     }

@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -20,16 +21,21 @@ import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
 @Composable
 fun RandomScreen(modifier: Modifier = Modifier, viewModel: RandomThingViewModel) {
-    LoadingView(loading = viewModel.randomImagesInfo.isEmpty())
-    Column (
-        modifier = modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.SpaceBetween,
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        RandomThingItem(
-            item = viewModel.randomImagesInfo[0],
-            modifier = Modifier.fillMaxWidth().height(240.dp),
-        )
+    if (viewModel.randomImagesInfo.isEmpty())
+    {
+        LoadingView(loading = true)
+    } else
+    {
+        Column (
+            modifier = modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.SpaceBetween,
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            RandomThingItem(
+                item = viewModel.randomImagesInfo[0],
+                modifier = Modifier.fillMaxWidth().height(240.dp),
+            )
+        }
     }
 }
 

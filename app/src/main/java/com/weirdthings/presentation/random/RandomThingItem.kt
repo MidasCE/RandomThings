@@ -1,11 +1,8 @@
 package com.weirdthings.presentation.random
 
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import com.weirdthings.data.entity.ImageInfo
 import com.weirdthings.presentation.common.NetworkRandomImage
 
@@ -16,9 +13,9 @@ fun RandomThingItem(
     item: ImageInfo,
 ) {
     NetworkRandomImage(
-        url = item.url,
+        url = item.downloadUrl,
         contentDescription = null,
-        modifier = Modifier,
+        modifier = modifier,
     )
     Text(item.author)
 }
