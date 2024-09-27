@@ -22,13 +22,14 @@ class RandomThingViewModel @Inject constructor(
     }
 
     init {
-        initRandomContent()
+        fetchRandomContent()
     }
 
-    private fun initRandomContent() {
+    fun fetchRandomContent() {
         launchNetwork() {
             contentUseCase.getRandomImageContent()
                 .collect {
+                    _randomImages.clear()
                     _randomImages.add(it)
                 }
         }
