@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.randomthings.domain.entity.RandomImageContent
 import com.randomthings.presentation.loader.LoadingView
 import kotlinx.coroutines.launch
 
@@ -49,7 +50,7 @@ fun RandomScreen(modifier: Modifier = Modifier, viewModel: RandomThingViewModel)
         } else
         {
             LazyColumn(
-                modifier = Modifier.fillMaxSize(),
+                modifier = modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.SpaceBetween,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
@@ -67,11 +68,23 @@ fun RandomScreen(modifier: Modifier = Modifier, viewModel: RandomThingViewModel)
 @Preview()
 @Composable
 private fun RandomScreenPreview() {
-    Column (
-        modifier = Modifier.fillMaxWidth(),
+    val content = RandomImageContent(
+        id = "1",
+        author = "Test Long Long Long Author",
+        width = 512,
+        height = 256,
+        downloadUrl = "https://fastly.picsum.photos/id/176/"
+    )
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Text("DESCRIPTION")
+        items(1) {
+            RandomThingItem(
+                item = content,
+                modifier = Modifier.fillMaxWidth().height(240.dp),
+            )
+        }
     }
 }
