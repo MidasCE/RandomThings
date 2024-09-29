@@ -3,25 +3,23 @@ package com.randomthings.presentation.random
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.focus.FocusRequester.Companion.createRefs
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
+import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
 import com.randomthings.domain.entity.RandomImageContent
 import com.randomthings.presentation.common.NetworkRandomImage
 
@@ -38,7 +36,7 @@ fun RandomThingImage(
         NetworkRandomImage(
             url = item.downloadUrl,
             contentDescription = null,
-            modifier = modifier,
+            modifier = Modifier,
         )
     }
 }
@@ -48,11 +46,14 @@ fun RandomThingDetail(
     modifier: Modifier = Modifier,
     item: RandomImageContent,
 ) {
-    Column(
-        verticalArrangement = Arrangement.Bottom,
-        modifier = Modifier
+    ConstraintLayout(
+        modifier = modifier
     ) {
-        Text(item.author)
+        Text(text = item.author,
+            style = MaterialTheme.typography.titleSmall,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier
+        )
     }
 }
 
@@ -60,20 +61,33 @@ fun RandomThingDetail(
 fun RandomThingItem(
     modifier: Modifier = Modifier,
     item: RandomImageContent,
+    imageHeight : Dp = 240.dp,
 ) {
-
-    Column (
-        modifier = Modifier
-            .wrapContentSize()
+    ConstraintLayout (
+        modifier = modifier
+            .fillMaxWidth()
             .background(color = MaterialTheme.colorScheme.background)
     ) {
+        val (image, titleView) = createRefs()
         RandomThingImage(
-            modifier = modifier,
             item = item,
+            modifier = Modifier.constrainAs(image) {
+                start.linkTo(parent.start, 16.dp)
+                top.linkTo(parent.top, 16.dp)
+                end.linkTo(parent.end, 16.dp)
+                width = Dimension.preferredWrapContent
+                height = Dimension.value(imageHeight);
+            }
         )
         RandomThingDetail(
-            modifier = Modifier,
             item = item,
+            modifier = Modifier.constrainAs(titleView) {
+                top.linkTo(image.bottom, 16.dp)
+                bottom.linkTo(parent.bottom, 16.dp)
+                start.linkTo(image.start, 16.dp)
+                end.linkTo(parent.end, 16.dp)
+                width = Dimension.wrapContent
+            }
         )
     }
 }
@@ -83,7 +97,7 @@ fun RandomThingItem(
 private fun RandomThingItemPreview() {
     val content = RandomImageContent(
         id = "1",
-        author = "Test Long Long Long Author",
+        author = "Author : This is Sheryl",
         width = 512,
         height = 256,
         downloadUrl = "https://fastly.picsum.photos/id/176/"

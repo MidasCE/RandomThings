@@ -5,8 +5,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
@@ -20,7 +23,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.randomthings.domain.entity.RandomImageContent
+import com.randomthings.presentation.home.BottomBar
 import com.randomthings.presentation.loader.LoadingView
 import kotlinx.coroutines.launch
 
@@ -68,6 +73,7 @@ fun RandomScreen(modifier: Modifier = Modifier, viewModel: RandomThingViewModel)
 @Preview()
 @Composable
 private fun RandomScreenPreview() {
+
     val content = RandomImageContent(
         id = "1",
         author = "Test Long Long Long Author",
@@ -75,16 +81,22 @@ private fun RandomScreenPreview() {
         height = 256,
         downloadUrl = "https://fastly.picsum.photos/id/176/"
     )
-    LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.SpaceBetween,
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        items(1) {
-            RandomThingItem(
-                item = content,
-                modifier = Modifier.fillMaxWidth().height(240.dp),
-            )
+    Scaffold(
+        modifier = Modifier.imePadding(),
+        bottomBar = { BottomBar() },
+    ) { innerPaddingModifier ->
+        LazyColumn(
+            modifier = Modifier.fillMaxSize()
+                .padding(innerPaddingModifier),
+            verticalArrangement = Arrangement.SpaceBetween,
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            items(1) {
+                RandomThingItem(
+                    item = content,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            }
         }
     }
 }

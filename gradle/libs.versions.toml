@@ -19,6 +19,8 @@ lifecycle = "2.8.5"
 room = "2.6.1"
 lottie = "6.5.2"
 work = "2.9.1"
+navigationCompose = "2.8.1"
+constraintlayoutCompose = "1.0.1"
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -52,6 +54,9 @@ compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview"
 compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
 compose-material-icons = { module = "androidx.compose.material:material-icons-extended" }
 compose-material3-windowsize = { module = "androidx.compose.material3:material3-window-size-class" }
+
+navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose"}
+constraintlayout-compose = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "constraintlayoutCompose"}
 
 # Coroutine
 coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines"}

@@ -88,6 +88,8 @@ dependencies {
     implementation(libs.compose.material3)
     implementation(libs.compose.material.icons)
     implementation(libs.compose.material3.windowsize)
+    implementation(libs.navigation.compose)
+    implementation(libs.constraintlayout.compose)
 
     // JSON
     implementation(libs.moshi)
