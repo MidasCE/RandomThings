@@ -5,10 +5,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.compose.rememberNavController
 import com.randomthings.presentation.home.BottomBar
-import com.randomthings.presentation.random.RandomScreen
-import com.randomthings.presentation.random.RandomThingViewModel
+import com.randomthings.presentation.navigation.AppNavHost
 
 @Composable
 fun RandomThingsApp() {
@@ -16,7 +15,10 @@ fun RandomThingsApp() {
         modifier = Modifier.imePadding(),
         bottomBar = { BottomBar() },
     ) { innerPaddingModifier ->
-        val viewModel: RandomThingViewModel = hiltViewModel(key = RandomThingViewModel.TAG)
-        RandomScreen(Modifier.padding(innerPaddingModifier), viewModel)
+        val navController = rememberNavController()
+        AppNavHost(
+            navController = navController,
+            modifier = Modifier.padding(innerPaddingModifier),
+        )
     }
 }

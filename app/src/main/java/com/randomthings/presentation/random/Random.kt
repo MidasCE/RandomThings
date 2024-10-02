@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -44,16 +45,16 @@ fun RandomScreen(modifier: Modifier = Modifier, viewModel: RandomThingViewModel)
         }
     }
 
-    PullToRefreshBox(
-        state = pullRefreshState,
-        isRefreshing = isRefreshing,
-        onRefresh = onRefresh,
-    ) {
-        if (viewModel.randomImages.isEmpty())
-        {
-            LoadingView(loading = true)
-        } else
-        {
+    if (viewModel.randomImages.isEmpty())
+    {
+        LoadingView(loading = true)
+    } else
+    {
+        PullToRefreshBox(
+            state = pullRefreshState,
+            isRefreshing = isRefreshing,
+            onRefresh = onRefresh,
+        ) {
             LazyColumn(
                 modifier = modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.SpaceBetween,
@@ -62,7 +63,7 @@ fun RandomScreen(modifier: Modifier = Modifier, viewModel: RandomThingViewModel)
                 items(viewModel.randomImages.size) {
                     RandomThingItem(
                         item = viewModel.randomImages[it],
-                        modifier = Modifier.fillMaxWidth().height(240.dp),
+                        modifier = Modifier.fillMaxWidth(),
                     )
                 }
             }
@@ -70,9 +71,16 @@ fun RandomScreen(modifier: Modifier = Modifier, viewModel: RandomThingViewModel)
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview()
 @Composable
 private fun RandomScreenPreview() {
+    val pullRefreshState = rememberPullToRefreshState()
+    var isRefreshing by remember { mutableStateOf(false) }
+
+    val onRefresh: () -> Unit = {
+        isRefreshing = true
+    }
 
     val content = RandomImageContent(
         id = "1",
@@ -81,13 +89,14 @@ private fun RandomScreenPreview() {
         height = 256,
         downloadUrl = "https://fastly.picsum.photos/id/176/"
     )
-    Scaffold(
-        modifier = Modifier.imePadding(),
-        bottomBar = { BottomBar() },
-    ) { innerPaddingModifier ->
+
+    PullToRefreshBox(
+        state = pullRefreshState,
+        isRefreshing = isRefreshing,
+        onRefresh = onRefresh,
+    ) {
         LazyColumn(
-            modifier = Modifier.fillMaxSize()
-                .padding(innerPaddingModifier),
+            modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
