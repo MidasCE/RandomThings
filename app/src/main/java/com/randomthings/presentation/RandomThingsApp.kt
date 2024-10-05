@@ -8,17 +8,21 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.randomthings.presentation.home.BottomBar
 import com.randomthings.presentation.navigation.AppNavHost
+import com.randomthings.presentation.theme.AppTheme
 
 @Composable
 fun RandomThingsApp() {
-    Scaffold(
-        modifier = Modifier.imePadding(),
-        bottomBar = { BottomBar() },
-    ) { innerPaddingModifier ->
+    AppTheme {
         val navController = rememberNavController()
-        AppNavHost(
-            navController = navController,
-            modifier = Modifier.padding(innerPaddingModifier),
-        )
+
+        Scaffold(
+            modifier = Modifier.imePadding(),
+            bottomBar = { BottomBar(navController) },
+        ) { innerPaddingModifier ->
+            AppNavHost(
+                navController = navController,
+                modifier = Modifier.padding(innerPaddingModifier),
+            )
+        }
     }
 }
