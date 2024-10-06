@@ -28,14 +28,14 @@ object Home : Destination {
     override val unselectedIcon = Icons.Outlined.Home
 }
 
-object Quote : Destination {
+object Meme : Destination {
     override val route = "quote"
     override val stringTitleResource: Int
-        get() = R.string.bottom_navigation_quote
+        get() = R.string.bottom_navigation_meme
     override val selectedIcon = Icons.Filled.ChatBubble
     override val unselectedIcon = Icons.Outlined.ChatBubble
 }
 
 
 // Screens to be displayed in the Bottom Bar
-val bottomBarScreens = listOf(Home, Quote)
+val bottomBarScreens = listOf(Home, Meme)

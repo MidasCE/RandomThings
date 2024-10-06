@@ -24,6 +24,7 @@ android {
     buildTypes {
         debug {
             buildConfigField("String", "BASE_PICS_SUM_URL", "\"https://picsum.photos/\"")
+            buildConfigField("String", "BASE_MEME_URL", "\"https://meme-api.com/\"")
         }
         release {
             isMinifyEnabled = false
@@ -32,6 +33,7 @@ android {
                 "proguard-rules.pro"
             )
             buildConfigField("String", "BASE_PICS_SUM_URL", "\"https://picsum.photos/\"")
+            buildConfigField("String", "BASE_MEME_URL", "\"https://meme-api.com/\"")
         }
     }
     compileOptions {

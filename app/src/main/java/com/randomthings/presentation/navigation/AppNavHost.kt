@@ -1,12 +1,13 @@
 package com.randomthings.presentation.navigation
 
-import androidx.compose.foundation.layout.Row
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.randomthings.presentation.meme.MemeScreen
+import com.randomthings.presentation.meme.MemeViewModel
 import com.randomthings.presentation.random.RandomScreen
 import com.randomthings.presentation.random.RandomThingViewModel
 
@@ -26,8 +27,9 @@ fun AppNavHost(
             val viewModel: RandomThingViewModel = hiltViewModel(key = RandomThingViewModel.TAG)
             RandomScreen(modifier, viewModel)
         }
-        composable(route = Quote.route) {
-            Row {  }
+        composable(route = Meme.route) {
+            val viewModel: MemeViewModel = hiltViewModel(key = MemeViewModel.TAG)
+            MemeScreen(modifier, viewModel)
         }
     }
 }

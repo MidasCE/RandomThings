@@ -4,7 +4,9 @@ import android.content.Context
 import coil.ImageLoader
 import com.randomthings.BuildConfig
 import com.randomthings.data.remote.Networking
+import com.randomthings.data.remote.apis.MemeApi
 import com.randomthings.data.remote.apis.PicSumApi
+import com.randomthings.di.qualifier.BaseMemeUrl
 import com.randomthings.di.qualifier.BasePicsSumUrl
 import dagger.Module
 import dagger.Provides
@@ -44,6 +46,22 @@ class NetworkModule {
 
     @Provides
     @Singleton
+    fun provideMemeApi(
+        @BaseMemeUrl baseMemeUrl: String,
+        okHttpClient: OkHttpClient
+    ): MemeApi = Networking.createService(
+        baseMemeUrl,
+        okHttpClient,
+        MemeApi::class.java
+    )
+
+    @Provides
+    @Singleton
     @BasePicsSumUrl
     fun provideBasePicsSumUrl(): String = BuildConfig.BASE_PICS_SUM_URL
+
+    @Provides
+    @Singleton
+    @BaseMemeUrl
+    fun provideBaseMemeUrl(): String = BuildConfig.BASE_MEME_URL
 }

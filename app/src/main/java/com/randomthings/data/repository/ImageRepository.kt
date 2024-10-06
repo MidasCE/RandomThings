@@ -12,7 +12,7 @@ class ImageRepository @Inject constructor(
 
     suspend fun getImageInfo(
         imageId: Int,
-    ): Flow<com.randomthings.data.entity.ImageInfo> =
+    ): Flow<com.randomthings.data.entity.ImageEntity> =
         flow {
             emit(picSumApi.getImageInfo(imageId))
         }.map { it }

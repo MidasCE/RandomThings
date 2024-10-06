@@ -1,4 +1,4 @@
-package com.randomthings.presentation.random
+package com.randomthings.presentation.meme
 
 import androidx.compose.runtime.mutableStateListOf
 import com.randomthings.domain.content.ContentUseCase
@@ -8,29 +8,29 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class RandomThingViewModel @Inject constructor(
+class MemeViewModel @Inject constructor(
     private val contentUseCase: ContentUseCase,
 ) : BaseViewModel() {
 
-    private val _randomImages = mutableStateListOf<ImageContent>()
 
-    val randomImages: List<ImageContent> = _randomImages
+    private val _randomMeme = mutableStateListOf<ImageContent>()
+
+    val randomMemes: List<ImageContent> = _randomMeme
 
     companion object {
-        const val TAG = "RandomThingViewModel"
-        const val MAX_IMAGE_INDEX = 1084
+        const val TAG = "MemeViewModel"
     }
 
     init {
-        fetchRandomContent()
+        fetchRandomMeme()
     }
 
-    fun fetchRandomContent() {
+    fun fetchRandomMeme() {
         launchNetwork() {
-            contentUseCase.getRandomImageContent()
+            contentUseCase.getRandomMemeContent()
                 .collect {
-                    _randomImages.clear()
-                    _randomImages.add(it)
+                    _randomMeme.clear()
+                    _randomMeme.add(it)
                 }
         }
     }

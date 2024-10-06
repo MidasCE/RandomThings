@@ -1,4 +1,4 @@
-package com.randomthings.presentation.random
+package com.randomthings.presentation.meme
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,14 +15,14 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.randomthings.domain.entity.ImageContent
 import com.randomthings.presentation.loader.LoadingView
+import com.randomthings.presentation.random.RandomThingItem
 import kotlinx.coroutines.launch
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RandomScreen(modifier: Modifier = Modifier, viewModel: RandomThingViewModel) {
+fun MemeScreen(modifier: Modifier = Modifier, viewModel: MemeViewModel) {
     val pullRefreshState = rememberPullToRefreshState()
     var isRefreshing by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
@@ -30,12 +30,12 @@ fun RandomScreen(modifier: Modifier = Modifier, viewModel: RandomThingViewModel)
     val onRefresh: () -> Unit = {
         isRefreshing = true
         coroutineScope.launch {
-            viewModel.fetchRandomContent();
+            viewModel.fetchRandomMeme();
             isRefreshing = false
         }
     }
 
-    if (viewModel.randomImages.isEmpty())
+    if (viewModel.randomMemes.isEmpty())
     {
         LoadingView(loading = true)
     } else
@@ -50,51 +50,12 @@ fun RandomScreen(modifier: Modifier = Modifier, viewModel: RandomThingViewModel)
                 verticalArrangement = Arrangement.SpaceBetween,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                items(viewModel.randomImages.size) {
+                items(viewModel.randomMemes.size) {
                     RandomThingItem(
-                        item = viewModel.randomImages[it],
+                        item = viewModel.randomMemes[it],
                         modifier = Modifier.fillMaxWidth(),
                     )
                 }
-            }
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Preview()
-@Composable
-private fun RandomScreenPreview() {
-    val pullRefreshState = rememberPullToRefreshState()
-    var isRefreshing by remember { mutableStateOf(false) }
-
-    val onRefresh: () -> Unit = {
-        isRefreshing = true
-    }
-
-    val content = ImageContent.RandomImageContent(
-        id = "1",
-        author = "Test Long Long Long Author",
-        width = 512,
-        height = 256,
-        downloadUrl = "https://fastly.picsum.photos/id/176/"
-    )
-
-    PullToRefreshBox(
-        state = pullRefreshState,
-        isRefreshing = isRefreshing,
-        onRefresh = onRefresh,
-    ) {
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.SpaceBetween,
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            items(1) {
-                RandomThingItem(
-                    item = content,
-                    modifier = Modifier.fillMaxWidth(),
-                )
             }
         }
     }
