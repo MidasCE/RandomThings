@@ -15,8 +15,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.randomthings.domain.entity.ImageContent
 import com.randomthings.presentation.loader.LoadingView
-import com.randomthings.presentation.random.RandomThingItem
 import kotlinx.coroutines.launch
 
 
@@ -51,8 +51,8 @@ fun MemeScreen(modifier: Modifier = Modifier, viewModel: MemeViewModel) {
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 items(viewModel.randomMemes.size) {
-                    RandomThingItem(
-                        item = viewModel.randomMemes[it],
+                    MemeItem(
+                        item = viewModel.randomMemes[it] as ImageContent.MemeImageContent,
                         modifier = Modifier.fillMaxWidth(),
                     )
                 }

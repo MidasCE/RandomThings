@@ -52,7 +52,7 @@ fun RandomScreen(modifier: Modifier = Modifier, viewModel: RandomThingViewModel)
             ) {
                 items(viewModel.randomImages.size) {
                     RandomThingItem(
-                        item = viewModel.randomImages[it],
+                        item = viewModel.randomImages[it] as ImageContent.RandomImageContent,
                         modifier = Modifier.fillMaxWidth(),
                     )
                 }

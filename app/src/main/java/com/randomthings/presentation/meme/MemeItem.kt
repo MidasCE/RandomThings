@@ -1,4 +1,4 @@
-package com.randomthings.presentation.random
+package com.randomthings.presentation.meme
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -8,37 +8,41 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.constraintlayout.compose.atMost
 import com.randomthings.domain.entity.ImageContent
 import com.randomthings.presentation.common.NetworkImage
 
 
 @Composable
-fun RandomThingImage(
+fun MemeImage(
     modifier: Modifier = Modifier,
-    item: ImageContent.RandomImageContent,
+    item: ImageContent.MemeImageContent,
+    contentScale: ContentScale,
 ) {
     Surface(
         shape = RoundedCornerShape(8),
         modifier = modifier
     ) {
         NetworkImage(
-            url = item.downloadUrl,
+            url = item.url,
             contentDescription = null,
             modifier = Modifier,
+            contentScale = contentScale,
         )
     }
 }
 
 @Composable
-fun RandomThingDetail(
+fun MemeDetail(
     modifier: Modifier = Modifier,
-    item: ImageContent.RandomImageContent,
+    item: ImageContent.MemeImageContent,
 ) {
     ConstraintLayout(
         modifier = modifier
@@ -52,10 +56,10 @@ fun RandomThingDetail(
 }
 
 @Composable
-fun RandomThingItem(
+fun MemeItem(
     modifier: Modifier = Modifier,
-    item: ImageContent.RandomImageContent,
-    imageHeight : Dp = 240.dp,
+    item: ImageContent.MemeImageContent,
+    maxHeight : Dp = 400.dp,
 ) {
     ConstraintLayout (
         modifier = modifier
@@ -63,17 +67,18 @@ fun RandomThingItem(
             .background(color = MaterialTheme.colorScheme.background)
     ) {
         val (image, titleView) = createRefs()
-        RandomThingImage(
+        MemeImage(
             item = item,
             modifier = Modifier.constrainAs(image) {
                 start.linkTo(parent.start, 16.dp)
                 top.linkTo(parent.top, 16.dp)
                 end.linkTo(parent.end, 16.dp)
-                width = Dimension.preferredWrapContent
-                height = Dimension.value(imageHeight);
-            }
+                width = Dimension.matchParent
+                height = Dimension.preferredWrapContent.atMost(maxHeight)
+            },
+            contentScale = ContentScale.FillWidth
         )
-        RandomThingDetail(
+        MemeDetail(
             item = item,
             modifier = Modifier.constrainAs(titleView) {
                 top.linkTo(image.bottom, 16.dp)
@@ -88,15 +93,12 @@ fun RandomThingItem(
 
 @Preview()
 @Composable
-private fun RandomThingItemPreview() {
-    val content = ImageContent.RandomImageContent(
-        id = "1",
+private fun MemeItemPreview() {
+    val content = ImageContent.MemeImageContent(
         author = "Author : This is Sheryl",
-        width = 512,
-        height = 256,
-        downloadUrl = "https://fastly.picsum.photos/id/176/"
+        url= "https://i.redd.it/0oc1h5gtuosd1.gif"
     )
-    RandomThingItem(
+    MemeItem(
         modifier = Modifier,
         item = content
     )

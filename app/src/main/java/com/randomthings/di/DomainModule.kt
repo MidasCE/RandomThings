@@ -1,6 +1,7 @@
 package com.randomthings.di
 
 import com.randomthings.data.repository.ImageRepository
+import com.randomthings.data.repository.MemeRepository
 import com.randomthings.domain.content.ContentUseCase
 import com.randomthings.domain.content.ContentUseCaseImpl
 import dagger.Module
@@ -17,7 +18,8 @@ class DomainModule {
     @Singleton
     fun provideContentUseCase(
         imageRepository: ImageRepository,
+        memeRepository: MemeRepository
     ): ContentUseCase = ContentUseCaseImpl(
-        imageRepository
+        imageRepository, memeRepository
     )
 }
