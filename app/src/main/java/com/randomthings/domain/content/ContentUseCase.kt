@@ -7,5 +7,7 @@ interface ContentUseCase {
 
     suspend fun getRandomImageContent(): Flow<ImageContent>
 
+    suspend fun getRandomImageContents(page: Int, limit : Int): Flow<List<ImageContent>>
+
     suspend fun getRandomMemeContent(): Flow<ImageContent>
 }

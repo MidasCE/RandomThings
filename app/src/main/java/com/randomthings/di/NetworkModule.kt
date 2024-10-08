@@ -14,6 +14,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import javax.inject.Singleton
 
 @Module
@@ -24,6 +25,7 @@ class NetworkModule {
     @Singleton
     fun provideApiOkHttpClient(
     ): OkHttpClient = OkHttpClient.Builder()
+        .addInterceptor(getHttpLoggingInterceptor())
         .build()
 
     @Provides
@@ -64,4 +66,10 @@ class NetworkModule {
     @Singleton
     @BaseMemeUrl
     fun provideBaseMemeUrl(): String = BuildConfig.BASE_MEME_URL
+
+    private fun getHttpLoggingInterceptor() = HttpLoggingInterceptor()
+        .apply {
+            level = if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY
+            else HttpLoggingInterceptor.Level.NONE
+        }
 }

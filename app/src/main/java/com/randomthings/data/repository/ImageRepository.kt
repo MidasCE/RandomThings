@@ -17,4 +17,12 @@ class ImageRepository @Inject constructor(
             emit(picSumApi.getImageInfo(imageId))
         }.map { it }
 
+    suspend fun getImageInfoList(
+        page: Int,
+        limit: Int,
+    ): Flow<List<com.randomthings.data.entity.ImageEntity>> =
+        flow {
+            emit(picSumApi.getImageList(page, limit))
+        }.map { it }
+
 }

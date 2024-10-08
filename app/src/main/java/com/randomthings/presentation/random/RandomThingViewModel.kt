@@ -27,10 +27,10 @@ class RandomThingViewModel @Inject constructor(
 
     fun fetchRandomContent() {
         launchNetwork() {
-            contentUseCase.getRandomImageContent()
+            contentUseCase.getRandomImageContents(1, 10)
                 .collect {
                     _randomImages.clear()
-                    _randomImages.add(it)
+                    _randomImages.addAll(it)
                 }
         }
     }

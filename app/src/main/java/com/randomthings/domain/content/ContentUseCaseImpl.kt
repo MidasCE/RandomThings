@@ -5,7 +5,10 @@ import com.randomthings.data.repository.MemeRepository
 import com.randomthings.domain.entity.ImageContent
 import com.randomthings.presentation.random.RandomThingViewModel.Companion.MAX_IMAGE_INDEX
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flatMap
+import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 
 class ContentUseCaseImpl(
     private val imageRepository: ImageRepository,
@@ -25,6 +28,22 @@ class ContentUseCaseImpl(
                     downloadUrl = it.downloadUrl
                 )
                 randomImageContent
+            }
+    }
+
+    override suspend fun getRandomImageContents(page: Int, limit : Int): Flow<List<ImageContent>> {
+        return imageRepository.getImageInfoList(page, limit)
+            .map { list ->
+                list.map {
+                    val randomImageContent = ImageContent.RandomImageContent(
+                        id = it.id,
+                        width = it.width,
+                        height = it.height,
+                        author = it.author,
+                        downloadUrl = it.downloadUrl
+                    )
+                    randomImageContent
+                }
             }
     }
 
