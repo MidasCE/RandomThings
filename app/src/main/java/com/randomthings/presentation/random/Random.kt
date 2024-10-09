@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.randomthings.domain.entity.ImageContent
+import com.randomthings.presentation.common.list.EndlessLazyColumn
 import com.randomthings.presentation.loader.LoadingView
 import kotlinx.coroutines.launch
 
@@ -33,7 +34,7 @@ fun RandomScreen(modifier: Modifier = Modifier, viewModel: RandomThingViewModel)
     val onRefresh: () -> Unit = {
         isRefreshing = true
         coroutineScope.launch {
-            viewModel.fetchRandomContent();
+            viewModel.refreshData();
             isRefreshing = false
         }
     }
@@ -50,10 +51,11 @@ fun RandomScreen(modifier: Modifier = Modifier, viewModel: RandomThingViewModel)
             isRefreshing = isRefreshing,
             onRefresh = onRefresh,
         ) {
-            LazyColumn(
+            EndlessLazyColumn(
                 modifier = modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.SpaceBetween,
                 horizontalAlignment = Alignment.CenterHorizontally,
+                loadMore = { viewModel.fetchRandomContent() }
             ) {
                 items(viewModel.randomImages.size) {
                     RandomThingItem(

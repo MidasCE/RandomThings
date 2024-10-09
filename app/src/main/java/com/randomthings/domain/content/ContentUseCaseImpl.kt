@@ -3,17 +3,17 @@ package com.randomthings.domain.content
 import com.randomthings.data.repository.ImageRepository
 import com.randomthings.data.repository.MemeRepository
 import com.randomthings.domain.entity.ImageContent
-import com.randomthings.presentation.random.RandomThingViewModel.Companion.MAX_IMAGE_INDEX
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flatMap
-import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
 
 class ContentUseCaseImpl(
     private val imageRepository: ImageRepository,
     private val memeRepository: MemeRepository
 ) : ContentUseCase {
+
+    companion object {
+        const val MAX_IMAGE_INDEX = 1024
+    }
 
     override suspend fun getRandomImageContent(): Flow<ImageContent> {
         val randomId = (0..MAX_IMAGE_INDEX).random()
