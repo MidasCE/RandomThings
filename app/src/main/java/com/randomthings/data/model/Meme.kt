@@ -1,10 +1,10 @@
-package com.randomthings.data.entity
+package com.randomthings.data.model
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class MemeEntity(
+data class Meme(
 
     @Json(name = "postLink")
     val postLink: String,

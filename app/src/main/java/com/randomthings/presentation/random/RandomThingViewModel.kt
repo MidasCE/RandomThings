@@ -6,7 +6,6 @@ import com.randomthings.domain.entity.ImageContent
 import com.randomthings.presentation.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
-import kotlin.random.Random
 
 @HiltViewModel
 class RandomThingViewModel @Inject constructor(

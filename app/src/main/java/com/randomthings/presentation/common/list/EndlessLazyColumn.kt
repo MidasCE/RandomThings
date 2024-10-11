@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -25,7 +24,8 @@ fun EndlessLazyColumn(
 ) {
 
     val reachedBottom: Boolean by remember {
-        derivedStateOf { listState.reachedBottom()
+        derivedStateOf {
+            listState.reachedBottom()
         }
     }
 
