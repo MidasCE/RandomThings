@@ -2,14 +2,17 @@ package com.randomthings.data.local.db.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.squareup.moshi.Json
 
-@Entity(tableName = "favourites")
+@Entity(tableName = "favourites", indices = [Index(value = ["type", "dataId"], unique = true)])
 data class FavouriteEntity(
 
-    @PrimaryKey
+    @Json(name = "id")
+    @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
-    val id: String,
+    val id: Int = 0,
 
     @ColumnInfo(name = "type")
     val type: FavouriteDataType,

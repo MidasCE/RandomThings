@@ -2,12 +2,19 @@ package com.randomthings.presentation.random
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -55,6 +62,7 @@ fun RandomThingDetail(
 fun RandomThingItem(
     modifier: Modifier = Modifier,
     item: ImageContent.RandomImageContent,
+    favouriteClick: (ImageContent.RandomImageContent) -> Unit,
     imageHeight : Dp = 240.dp,
 ) {
     ConstraintLayout (
@@ -62,7 +70,7 @@ fun RandomThingItem(
             .fillMaxWidth()
             .background(color = MaterialTheme.colorScheme.background)
     ) {
-        val (image, titleView) = createRefs()
+        val (image, titleView, favouriteIcon) = createRefs()
         RandomThingImage(
             item = item,
             modifier = Modifier.constrainAs(image) {
@@ -83,6 +91,23 @@ fun RandomThingItem(
                 width = Dimension.wrapContent
             }
         )
+
+        IconButton(
+            onClick = { favouriteClick(item) },
+
+            modifier = Modifier.constrainAs(favouriteIcon) {
+                top.linkTo(titleView.top)
+                bottom.linkTo(titleView.bottom)
+                end.linkTo(titleView.start, 8.dp)
+            }.size(24.dp)
+        ) {
+            Icon(
+                imageVector = if (item.favourite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                contentDescription = null,
+                tint = if (item.favourite) Color.Red else MaterialTheme.colorScheme.onSurface,
+            )
+
+        }
     }
 }
 
@@ -94,10 +119,12 @@ private fun RandomThingItemPreview() {
         author = "Author : This is Sheryl",
         width = 512,
         height = 256,
-        downloadUrl = "https://fastly.picsum.photos/id/176/"
+        downloadUrl = "https://fastly.picsum.photos/id/176/",
+        favourite = false,
     )
     RandomThingItem(
         modifier = Modifier,
-        item = content
+        item = content,
+        favouriteClick = {},
     )
 }

@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
+import com.randomthings.data.local.db.entity.FavouriteDataType
 import com.randomthings.data.local.db.entity.FavouriteEntity
 
 @Dao
@@ -19,4 +20,7 @@ interface FavouriteDao {
 
     @Query("SELECT * FROM favourites")
     fun getAll(): List<FavouriteEntity>
+
+    @Query("SELECT EXISTS(SELECT * FROM favourites WHERE type = :type AND dataId = :dataId)")
+    fun isRowIsExist(type: FavouriteDataType, dataId : String) : Boolean
 }

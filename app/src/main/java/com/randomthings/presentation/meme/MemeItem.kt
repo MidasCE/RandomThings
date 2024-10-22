@@ -1,9 +1,7 @@
 package com.randomthings.presentation.meme
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -14,11 +12,9 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import androidx.constraintlayout.compose.atMost
 import com.randomthings.domain.entity.ImageContent
 import com.randomthings.presentation.common.NetworkImage
 
@@ -95,7 +91,8 @@ fun MemeItem(
 private fun MemeItemPreview() {
     val content = ImageContent.MemeImageContent(
         author = "Author : This is Sheryl",
-        url= "https://i.redd.it/0oc1h5gtuosd1.gif"
+        url= "https://i.redd.it/0oc1h5gtuosd1.gif",
+        favourite = false
     )
     MemeItem(
         modifier = Modifier,

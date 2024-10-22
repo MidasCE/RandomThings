@@ -3,8 +3,6 @@ package com.randomthings.presentation.random
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
@@ -18,7 +16,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.randomthings.domain.entity.ImageContent
 import com.randomthings.presentation.common.list.EndlessLazyColumn
 import com.randomthings.presentation.loader.LoadingView
@@ -57,10 +54,11 @@ fun RandomScreen(modifier: Modifier = Modifier, viewModel: RandomThingViewModel)
                 horizontalAlignment = Alignment.CenterHorizontally,
                 loadMore = { viewModel.fetchRandomContent() }
             ) {
-                items(viewModel.randomImages.size) {
+                items(viewModel.randomImages.size) { randomImage ->
                     RandomThingItem(
-                        item = viewModel.randomImages[it] as ImageContent.RandomImageContent,
+                        item = viewModel.randomImages[randomImage] as ImageContent.RandomImageContent,
                         modifier = Modifier.fillMaxWidth(),
+                        favouriteClick = { viewModel.toggleContentFavourite(it) }
                     )
                 }
             }
@@ -84,7 +82,8 @@ private fun RandomScreenPreview() {
         author = "Test Long Long Long Author",
         width = 512,
         height = 256,
-        downloadUrl = "https://fastly.picsum.photos/id/176/"
+        downloadUrl = "https://fastly.picsum.photos/id/176/",
+        favourite = false,
     )
 
     PullToRefreshBox(
@@ -101,6 +100,7 @@ private fun RandomScreenPreview() {
                 RandomThingItem(
                     item = content,
                     modifier = Modifier.fillMaxWidth(),
+                    favouriteClick = { }
                 )
             }
         }

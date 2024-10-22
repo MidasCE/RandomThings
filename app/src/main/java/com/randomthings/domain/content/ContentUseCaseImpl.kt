@@ -1,14 +1,19 @@
 package com.randomthings.domain.content
 
+import com.randomthings.data.local.db.entity.FavouriteDataType
+import com.randomthings.data.repository.FavouriteRepository
 import com.randomthings.data.repository.ImageRepository
 import com.randomthings.data.repository.MemeRepository
 import com.randomthings.domain.entity.ImageContent
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.single
 
 class ContentUseCaseImpl(
     private val imageRepository: ImageRepository,
-    private val memeRepository: MemeRepository
+    private val memeRepository: MemeRepository,
+    private val favouriteRepository: FavouriteRepository
 ) : ContentUseCase {
 
     companion object {
@@ -25,7 +30,8 @@ class ContentUseCaseImpl(
                     width = it.width,
                     height = it.height,
                     author = it.author,
-                    downloadUrl = it.downloadUrl
+                    downloadUrl = it.downloadUrl,
+                    favourite = favouriteRepository.isFavourite(FavouriteDataType.Image, it.id).single(),
                 )
                 randomImageContent
             }
@@ -35,12 +41,14 @@ class ContentUseCaseImpl(
         return imageRepository.getImageInfoList(page, limit)
             .map { list ->
                 list.map {
+                    val isFavourite = favouriteRepository.isFavourite(FavouriteDataType.Image, it.id).single()
                     val randomImageContent = ImageContent.RandomImageContent(
                         id = it.id,
                         width = it.width,
                         height = it.height,
                         author = it.author,
-                        downloadUrl = it.downloadUrl
+                        downloadUrl = it.downloadUrl,
+                        favourite = isFavourite,
                     )
                     randomImageContent
                 }
@@ -52,10 +60,27 @@ class ContentUseCaseImpl(
             .map {
                 val randomImageContent = ImageContent.MemeImageContent(
                     author = it.author,
-                    url = it.url
+                    url = it.url,
+                    favourite = false,
                 )
                 randomImageContent
             }
+    }
+
+    override suspend fun favoriteContent(content: ImageContent): Flow<Long> {
+        if (content is ImageContent.RandomImageContent)
+        {
+            return favouriteRepository.saveAsFavourite(FavouriteDataType.Image, content.id)
+        }
+        return flowOf(Long.MIN_VALUE)
+    }
+
+    override suspend fun unFavoriteContent(content: ImageContent): Flow<Int> {
+        if (content is ImageContent.RandomImageContent)
+        {
+            return favouriteRepository.removeFavourite(FavouriteDataType.Image, content.id)
+        }
+        return flowOf(Int.MIN_VALUE)
     }
 
 }
