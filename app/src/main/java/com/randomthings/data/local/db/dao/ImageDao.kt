@@ -9,8 +9,8 @@ import com.randomthings.data.local.db.entity.ImageEntity
 @Dao
 interface ImageDao {
 
-    @Delete
-    suspend fun delete(entity: ImageEntity): Int
+    @Query("DELETE FROM images WHERE id = :id")
+    suspend fun delete(id: String): Int
     //return int value, indicating the number of rows removed from the database.
 
     @Insert

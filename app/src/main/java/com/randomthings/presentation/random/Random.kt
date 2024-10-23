@@ -82,6 +82,7 @@ private fun RandomScreenPreview() {
         author = "Test Long Long Long Author",
         width = 512,
         height = 256,
+        url = "https://fastly.picsum.photos/id/176/",
         downloadUrl = "https://fastly.picsum.photos/id/176/",
         favourite = false,
     )

@@ -6,6 +6,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 sealed class ImageContent : Parcelable {
     abstract val favourite: Boolean
+    abstract val url: String
 
     @Parcelize
     data class RandomImageContent(
@@ -13,6 +14,7 @@ sealed class ImageContent : Parcelable {
         val author: String,
         val width: Int,
         val height: Int,
+        override val url: String,
         val downloadUrl: String,
         override val favourite: Boolean,
     ) : ImageContent()
@@ -20,7 +22,7 @@ sealed class ImageContent : Parcelable {
     @Parcelize
     data class MemeImageContent(
         val author: String,
-        val url: String,
+        override val url: String,
         override val favourite: Boolean,
     ) : ImageContent()
 

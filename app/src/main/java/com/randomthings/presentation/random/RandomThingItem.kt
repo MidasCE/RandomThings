@@ -119,6 +119,7 @@ private fun RandomThingItemPreview() {
         author = "Author : This is Sheryl",
         width = 512,
         height = 256,
+        url = "https://fastly.picsum.photos/id/176/",
         downloadUrl = "https://fastly.picsum.photos/id/176/",
         favourite = false,
     )

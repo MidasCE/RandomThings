@@ -33,18 +33,14 @@ class ImageRepository @Inject constructor(
             emit(picSumApi.getImageList(page, limit))
         }.map { it }
 
-    suspend fun saveImage(image: Image): Flow<Long> =
+    suspend fun saveImageToDB(imageEntity: ImageEntity): Flow<Long> =
         flow {
-            val imageEntity = ImageEntity (
-                id = image.id,
-                author = image.author,
-                url = image.url,
-                downloadUrl = image.downloadUrl,
-                width = image.width,
-                height = image.height,
-                createdAt = Date()
-            )
             emit(appDatabase.imageDao().insert(imageEntity))
+        }.flowOn(dispatcher.io())
+
+    suspend fun removeImageFromDB(imageId: String): Flow<Int> =
+        flow {
+            emit(appDatabase.imageDao().delete(imageId))
         }.flowOn(dispatcher.io())
 
 }

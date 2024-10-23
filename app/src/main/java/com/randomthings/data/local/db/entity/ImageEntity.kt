@@ -3,7 +3,6 @@ package com.randomthings.data.local.db.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.squareup.moshi.JsonClass
 import java.util.Date
 
 @Entity(tableName = "images")
