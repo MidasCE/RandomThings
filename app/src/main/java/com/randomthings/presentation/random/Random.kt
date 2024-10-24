@@ -15,10 +15,13 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import com.randomthings.R
 import com.randomthings.domain.entity.ImageContent
 import com.randomthings.presentation.common.list.EndlessLazyColumn
 import com.randomthings.presentation.loader.LoadingView
+import com.randomthings.presentation.topbar.TopBarTitle
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -54,9 +57,12 @@ fun RandomScreen(modifier: Modifier = Modifier, viewModel: RandomThingViewModel)
                 horizontalAlignment = Alignment.CenterHorizontally,
                 loadMore = { viewModel.fetchRandomContent() }
             ) {
-                items(viewModel.randomImages.size) { randomImage ->
+                item(key = "TopBarTitle") {
+                    TopBarTitle(title = stringResource(R.string.top_bar_title_home))
+                }
+                items(viewModel.randomImages.size) { randomImageIndex ->
                     RandomThingItem(
-                        item = viewModel.randomImages[randomImage] as ImageContent.RandomImageContent,
+                        item = viewModel.randomImages[randomImageIndex] as ImageContent.RandomImageContent,
                         modifier = Modifier.fillMaxWidth(),
                         favouriteClick = { viewModel.toggleContentFavourite(it) }
                     )

@@ -19,4 +19,7 @@ interface ImageDao {
 
     @Query("SELECT * FROM images")
     fun getAll(): List<ImageEntity>
+
+    @Query("SELECT * FROM images where id in(:ids)")
+    fun getFromIds(ids: List<String>) : List<ImageEntity>
 }

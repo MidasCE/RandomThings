@@ -1,5 +1,9 @@
 <resources>
     <string name="app_name">RandomThings</string>
+    <string name="top_bar_title_home">Nice images for you</string>
+    <string name="top_bar_title_meme">Need meme?</string>
+    <string name="top_bar_title_favourite">You seem to love it!</string>
     <string name="bottom_navigation_home">Home</string>
     <string name="bottom_navigation_meme">Meme</string>
+    <string name="bottom_navigation_favourite">Favourite</string>
 </resources>

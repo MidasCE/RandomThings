@@ -36,4 +36,9 @@ class FavouriteRepository @Inject constructor(
         flow {
             emit(appDatabase.favouriteDao().isRowIsExist(dataType, dataId))
         }.flowOn(dispatcher.io())
+
+    suspend fun getAllFavourites(): Flow<List<FavouriteEntity>> =
+        flow {
+            emit(appDatabase.favouriteDao().getAll())
+        }.flowOn(dispatcher.io())
 }

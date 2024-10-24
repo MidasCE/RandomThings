@@ -43,4 +43,9 @@ class ImageRepository @Inject constructor(
             emit(appDatabase.imageDao().delete(imageId))
         }.flowOn(dispatcher.io())
 
+    suspend fun getSavedImagesFromDB(imageIds: List<String>): Flow<List<ImageEntity>> =
+        flow {
+            emit(appDatabase.imageDao().getFromIds(imageIds))
+        }.flowOn(dispatcher.io())
+
 }

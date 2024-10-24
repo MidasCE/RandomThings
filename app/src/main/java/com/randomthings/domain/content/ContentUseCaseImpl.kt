@@ -6,7 +6,9 @@ import com.randomthings.data.repository.FavouriteRepository
 import com.randomthings.data.repository.ImageRepository
 import com.randomthings.data.repository.MemeRepository
 import com.randomthings.domain.entity.ImageContent
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.single
@@ -83,8 +85,10 @@ class ContentUseCaseImpl(
                 height = content.height,
                 createdAt = Date()
             )
-            imageRepository.saveImageToDB(imageEntity)
-            return favouriteRepository.saveAsFavourite(FavouriteDataType.Image, content.id)
+            return imageRepository.saveImageToDB(imageEntity)
+                .flatMapConcat {
+                    favouriteRepository.saveAsFavourite(FavouriteDataType.Image, content.id)
+                }
         }
         return flowOf(Long.MIN_VALUE)
     }
@@ -92,10 +96,35 @@ class ContentUseCaseImpl(
     override suspend fun unFavoriteContent(content: ImageContent): Flow<Int> {
         if (content is ImageContent.RandomImageContent)
         {
-            imageRepository.removeImageFromDB(content.id)
-            return favouriteRepository.removeFavourite(FavouriteDataType.Image, content.id)
+            return imageRepository.removeImageFromDB(content.id)
+                .flatMapConcat {
+                    favouriteRepository.removeFavourite(FavouriteDataType.Image, content.id)
+                }
         }
         return flowOf(Int.MIN_VALUE)
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override suspend fun getAllFavouriteContents(): Flow<List<ImageContent>> {
+        return favouriteRepository.getAllFavourites()
+            .map { favouriteEntities ->
+                favouriteEntities.map { it.dataId }.toList()
+            }.flatMapConcat {
+                imageRepository.getSavedImagesFromDB(it)
+            }.map { imageEntities ->
+                imageEntities.map {
+                    val randomImageContent = ImageContent.RandomImageContent(
+                        id = it.id,
+                        width = it.width,
+                        height = it.height,
+                        author = it.author,
+                        url = it.url,
+                        downloadUrl = it.downloadUrl,
+                        favourite = favouriteRepository.isFavourite(FavouriteDataType.Image, it.id).single(),
+                    )
+                    randomImageContent
+                }
+            }
     }
 
 }

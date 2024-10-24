@@ -17,9 +17,14 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.randomthings.R
 import com.randomthings.domain.entity.ImageContent
 import com.randomthings.presentation.loader.LoadingView
+import com.randomthings.presentation.random.RandomThingItem
+import com.randomthings.presentation.topbar.TopBarTitle
 import kotlinx.coroutines.launch
 
 
@@ -52,15 +57,55 @@ fun MemeScreen(modifier: Modifier = Modifier, viewModel: MemeViewModel) {
         ) {
             LazyColumn(
                 modifier = modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.SpaceBetween,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
+                item(key = "TopBarTitle") {
+                    TopBarTitle(title = stringResource(R.string.top_bar_title_meme))
+                }
                 items(viewModel.randomMemes.size) {
                     MemeItem(
                         item = viewModel.randomMemes[it] as ImageContent.MemeImageContent,
                         modifier = Modifier.fillMaxWidth(),
                     )
                 }
+            }
+        }
+    }
+}
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Preview()
+@Composable
+private fun MemeScreenPreview() {
+    val pullRefreshState = rememberPullToRefreshState()
+    var isRefreshing by remember { mutableStateOf(false) }
+
+    val onRefresh: () -> Unit = {
+        isRefreshing = true
+    }
+
+    val content = ImageContent.MemeImageContent(
+        author = "Test Long Long Long Author",
+        url = "https://fastly.picsum.photos/id/176/",
+        favourite = false,
+    )
+
+    PullToRefreshBox(
+        state = pullRefreshState,
+        isRefreshing = isRefreshing,
+        onRefresh = onRefresh,
+    ) {
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.SpaceBetween,
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            items(1) {
+                MemeItem(
+                    item = content,
+                    modifier = Modifier.fillMaxWidth(),
+                )
             }
         }
     }

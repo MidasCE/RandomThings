@@ -15,4 +15,6 @@ interface ContentUseCase {
     suspend fun favoriteContent(content: ImageContent): Flow<Long>
 
     suspend fun unFavoriteContent(content: ImageContent): Flow<Int>
+
+    suspend fun getAllFavouriteContents(): Flow<List<ImageContent>>
 }

@@ -2,12 +2,10 @@ package com.randomthings.presentation.random
 
 import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
-import coil.util.Logger
 import com.randomthings.domain.content.ContentUseCase
 import com.randomthings.domain.entity.ImageContent
 import com.randomthings.presentation.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.catch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -45,12 +43,12 @@ class RandomThingViewModel @Inject constructor(
             return
         }
 
-        launchNetwork() {
+        launchNetwork(
+            error = { e ->
+                Log.e("ERROR", e.message.orEmpty());
+            }
+        ) {
             contentUseCase.getRandomImageContents(_pageSet[currentPageIndex++], 10)
-
-                .catch { e ->
-                    Log.e("ERROR", e.message.orEmpty());
-                }
                 .collect {
                     _randomImages.addAll(it)
                 }
@@ -67,7 +65,11 @@ class RandomThingViewModel @Inject constructor(
     }
 
     fun toggleContentFavourite(content: ImageContent.RandomImageContent) {
-        launchNetwork {
+        launchNetwork(
+            error = { e ->
+                Log.e("ERROR", e.message.orEmpty());
+            }
+        ) {
             val favourite = !(content.favourite)
             val callingFlow =
                 if (favourite)
@@ -76,9 +78,7 @@ class RandomThingViewModel @Inject constructor(
                 } else {
                     contentUseCase.unFavoriteContent(content)
                 }
-            callingFlow.catch { e ->
-                Log.e("ERROR", e.message.orEmpty());
-            }.collect {
+            callingFlow.collect {
                 val index = _randomImages.indexOf(content)
                 if (index > -1) {
                     _randomImages[index] = content.copy(
