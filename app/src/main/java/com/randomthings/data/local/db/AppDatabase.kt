@@ -5,8 +5,10 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.randomthings.data.local.db.dao.FavouriteDao
 import com.randomthings.data.local.db.dao.ImageDao
+import com.randomthings.data.local.db.dao.MemeDao
 import com.randomthings.data.local.db.entity.FavouriteEntity
 import com.randomthings.data.local.db.entity.ImageEntity
+import com.randomthings.data.local.db.entity.MemeEntity
 import javax.inject.Singleton
 
 @Singleton
@@ -14,6 +16,7 @@ import javax.inject.Singleton
     entities = [
         FavouriteEntity::class,
         ImageEntity::class,
+        MemeEntity::class,
     ],
     exportSchema = false,
     version = 1
@@ -23,4 +26,6 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun favouriteDao(): FavouriteDao
 
     abstract fun imageDao(): ImageDao
+
+    abstract fun memeDao(): MemeDao
 }

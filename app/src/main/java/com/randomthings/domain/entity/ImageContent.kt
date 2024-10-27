@@ -21,7 +21,10 @@ sealed class ImageContent : Parcelable {
 
     @Parcelize
     data class MemeImageContent(
+        val postLink: String,
         val author: String,
+        val title: String,
+        val nsfw: Boolean,
         override val url: String,
         override val favourite: Boolean,
     ) : ImageContent()

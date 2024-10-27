@@ -1,5 +1,6 @@
 package com.randomthings.presentation.meme
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import com.randomthings.domain.content.ContentUseCase
 import com.randomthings.domain.entity.ImageContent
@@ -32,6 +33,31 @@ class MemeViewModel @Inject constructor(
                     _randomMeme.clear()
                     _randomMeme.add(it)
                 }
+        }
+    }
+
+    fun toggleContentFavourite(content: ImageContent.MemeImageContent) {
+        launchNetwork(
+            error = { e ->
+                Log.e("ERROR", e.message.orEmpty());
+            }
+        ) {
+            val favourite = !(content.favourite)
+            val callingFlow =
+                if (favourite)
+                {
+                    contentUseCase.favoriteContent(content)
+                } else {
+                    contentUseCase.unFavoriteContent(content)
+                }
+            callingFlow.collect {
+                val index = _randomMeme.indexOf(content)
+                if (index > -1) {
+                    _randomMeme[index] = content.copy(
+                        favourite = favourite,
+                    )
+                }
+            }
         }
     }
 }

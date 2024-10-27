@@ -66,6 +66,7 @@ fun MemeScreen(modifier: Modifier = Modifier, viewModel: MemeViewModel) {
                     MemeItem(
                         item = viewModel.randomMemes[it] as ImageContent.MemeImageContent,
                         modifier = Modifier.fillMaxWidth(),
+                        favouriteClick = { viewModel.toggleContentFavourite(it) }
                     )
                 }
             }
@@ -86,6 +87,9 @@ private fun MemeScreenPreview() {
     }
 
     val content = ImageContent.MemeImageContent(
+        postLink = "https://fastly.picsum.photos/id/176/",
+        title = "title",
+        nsfw = false,
         author = "Test Long Long Long Author",
         url = "https://fastly.picsum.photos/id/176/",
         favourite = false,
@@ -105,6 +109,7 @@ private fun MemeScreenPreview() {
                 MemeItem(
                     item = content,
                     modifier = Modifier.fillMaxWidth(),
+                    favouriteClick = { },
                 )
             }
         }

@@ -11,6 +11,7 @@ import androidx.compose.ui.res.stringResource
 import com.randomthings.R
 import com.randomthings.domain.entity.ImageContent
 import com.randomthings.presentation.loader.LoadingView
+import com.randomthings.presentation.meme.MemeItem
 import com.randomthings.presentation.random.RandomThingItem
 import com.randomthings.presentation.topbar.TopBarTitle
 
@@ -36,14 +37,23 @@ fun FavouriteScreen(modifier: Modifier = Modifier, viewModel: FavouriteViewModel
                 TopBarTitle(title = stringResource(R.string.top_bar_title_favourite))
             }
             items(viewModel.favouriteContents.size)  { index ->
-                val content = viewModel.favouriteContents[index];
-                if (content is ImageContent.RandomImageContent)
+                when (val content = viewModel.favouriteContents[index])
                 {
-                    RandomThingItem(
-                        item = content,
-                        modifier = Modifier.fillMaxWidth(),
-                        favouriteClick = {  }
-                    )
+                    is ImageContent.RandomImageContent ->
+                    {
+                        RandomThingItem(
+                            item = content,
+                            modifier = Modifier.fillMaxWidth(),
+                            favouriteClick = {  }
+                        )
+                    }
+
+                    is ImageContent.MemeImageContent ->
+                        MemeItem (
+                            item = content,
+                            modifier = Modifier.fillMaxWidth(),
+                            favouriteClick = {  }
+                        )
                 }
             }
         }

@@ -22,5 +22,6 @@ data class FavouriteEntity(
 )
 
 enum class FavouriteDataType(val value: Int){
-    Image(0)
+    Image(0),
+    Meme(1)
 }
