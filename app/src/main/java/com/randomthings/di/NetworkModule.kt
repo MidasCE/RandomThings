@@ -4,8 +4,10 @@ import android.content.Context
 import coil.ImageLoader
 import com.randomthings.BuildConfig
 import com.randomthings.data.remote.Networking
+import com.randomthings.data.remote.apis.DadJokesApi
 import com.randomthings.data.remote.apis.MemeApi
 import com.randomthings.data.remote.apis.PicSumApi
+import com.randomthings.di.qualifier.BaseDadJokesUrl
 import com.randomthings.di.qualifier.BaseMemeUrl
 import com.randomthings.di.qualifier.BasePicsSumUrl
 import dagger.Module
@@ -59,6 +61,17 @@ class NetworkModule {
 
     @Provides
     @Singleton
+    fun provideDadJokesApi(
+        @BaseDadJokesUrl baseDadJokesUrl: String,
+        okHttpClient: OkHttpClient
+    ): DadJokesApi = Networking.createService(
+        baseDadJokesUrl,
+        okHttpClient,
+        DadJokesApi::class.java
+    )
+
+    @Provides
+    @Singleton
     @BasePicsSumUrl
     fun provideBasePicsSumUrl(): String = BuildConfig.BASE_PICS_SUM_URL
 
@@ -66,6 +79,11 @@ class NetworkModule {
     @Singleton
     @BaseMemeUrl
     fun provideBaseMemeUrl(): String = BuildConfig.BASE_MEME_URL
+
+    @Provides
+    @Singleton
+    @BaseDadJokesUrl
+    fun provideBaseDadJokesUrl(): String = BuildConfig.BASE_DAD_JOKES_URL
 
     private fun getHttpLoggingInterceptor() = HttpLoggingInterceptor()
         .apply {

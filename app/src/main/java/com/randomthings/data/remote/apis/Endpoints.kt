@@ -5,4 +5,7 @@ object Endpoints {
     const val IMAGE_LIST = "/v2/list"
 
     const val RANDOM_MEME = "/gimme"
+
+
+    const val DAD_JOKES_SEARCH = "/search"
 }

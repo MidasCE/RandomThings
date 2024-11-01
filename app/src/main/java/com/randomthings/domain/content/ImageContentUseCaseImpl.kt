@@ -10,18 +10,17 @@ import com.randomthings.domain.entity.ImageContent
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapConcat
-import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.single
 import kotlinx.coroutines.flow.zip
 import java.util.Date
 
-class ContentUseCaseImpl(
+class ImageContentUseCaseImpl(
     private val imageRepository: ImageRepository,
     private val memeRepository: MemeRepository,
     private val favouriteRepository: FavouriteRepository
-) : ContentUseCase {
+) : ImageContentUseCase {
 
     companion object {
         const val MAX_IMAGE_INDEX = 1024
@@ -73,7 +72,7 @@ class ContentUseCaseImpl(
                     title = it.title,
                     url = it.url,
                     nsfw = it.nsfw,
-                    favourite = false,
+                    favourite = favouriteRepository.isFavourite(FavouriteDataType.Meme, it.postLink).single(),
                 )
                 randomImageContent
             }

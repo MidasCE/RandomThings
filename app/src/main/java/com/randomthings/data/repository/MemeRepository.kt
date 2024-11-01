@@ -2,7 +2,6 @@ package com.randomthings.data.repository
 
 import com.randomthings.AppDispatcher
 import com.randomthings.data.local.db.AppDatabase
-import com.randomthings.data.local.db.entity.ImageEntity
 import com.randomthings.data.local.db.entity.MemeEntity
 import com.randomthings.data.model.Meme
 import com.randomthings.data.remote.apis.MemeApi

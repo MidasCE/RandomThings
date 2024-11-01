@@ -2,9 +2,8 @@ package com.randomthings.domain.content
 
 import com.randomthings.domain.entity.ImageContent
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 
-interface ContentUseCase {
+interface ImageContentUseCase {
 
     suspend fun getRandomImageContent(): Flow<ImageContent>
 

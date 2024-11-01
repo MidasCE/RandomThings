@@ -3,7 +3,7 @@ package com.randomthings.presentation.favourite
 import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.viewModelScope
-import com.randomthings.domain.content.ContentUseCase
+import com.randomthings.domain.content.ImageContentUseCase
 import com.randomthings.domain.entity.ImageContent
 import com.randomthings.presentation.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class FavouriteViewModel @Inject constructor(
-    private val contentUseCase: ContentUseCase,
+    private val imageContentUseCase: ImageContentUseCase,
 ) : BaseViewModel() {
 
     companion object {
@@ -27,7 +27,7 @@ class FavouriteViewModel @Inject constructor(
     fun fetchFavouriteContents() {
         _favouriteContents.clear()
         viewModelScope.launch {
-            contentUseCase.getAllFavouriteContents()
+            imageContentUseCase.getAllFavouriteContents()
                 .catch { e->
                     Log.e("ERROR", e.message.orEmpty());
                 }

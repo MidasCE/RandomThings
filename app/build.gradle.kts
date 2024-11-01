@@ -25,6 +25,7 @@ android {
         debug {
             buildConfigField("String", "BASE_PICS_SUM_URL", "\"https://picsum.photos/\"")
             buildConfigField("String", "BASE_MEME_URL", "\"https://meme-api.com/\"")
+            buildConfigField("String", "BASE_DAD_JOKES_URL", "\"https://icanhazdadjoke.com/\"")
         }
         release {
             isMinifyEnabled = false
@@ -34,6 +35,7 @@ android {
             )
             buildConfigField("String", "BASE_PICS_SUM_URL", "\"https://picsum.photos/\"")
             buildConfigField("String", "BASE_MEME_URL", "\"https://meme-api.com/\"")
+            buildConfigField("String", "BASE_DAD_JOKES_URL", "\"https://icanhazdadjoke.com/\"")
         }
     }
     compileOptions {

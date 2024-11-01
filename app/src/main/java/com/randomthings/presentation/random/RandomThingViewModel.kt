@@ -2,7 +2,7 @@ package com.randomthings.presentation.random
 
 import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
-import com.randomthings.domain.content.ContentUseCase
+import com.randomthings.domain.content.ImageContentUseCase
 import com.randomthings.domain.entity.ImageContent
 import com.randomthings.presentation.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -10,7 +10,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RandomThingViewModel @Inject constructor(
-    private val contentUseCase: ContentUseCase,
+    private val imageContentUseCase: ImageContentUseCase,
 ) : BaseViewModel() {
 
     private val _randomImages = mutableStateListOf<ImageContent>()
@@ -48,7 +48,7 @@ class RandomThingViewModel @Inject constructor(
                 Log.e("ERROR", e.message.orEmpty());
             }
         ) {
-            contentUseCase.getRandomImageContents(_pageSet[currentPageIndex++], 10)
+            imageContentUseCase.getRandomImageContents(_pageSet[currentPageIndex++], 10)
                 .collect {
                     _randomImages.addAll(it)
                 }
@@ -74,9 +74,9 @@ class RandomThingViewModel @Inject constructor(
             val callingFlow =
                 if (favourite)
                 {
-                    contentUseCase.favoriteContent(content)
+                    imageContentUseCase.favoriteContent(content)
                 } else {
-                    contentUseCase.unFavoriteContent(content)
+                    imageContentUseCase.unFavoriteContent(content)
                 }
             callingFlow.collect {
                 val index = _randomImages.indexOf(content)
