@@ -6,4 +6,8 @@
     <string name="bottom_navigation_home">Home</string>
     <string name="bottom_navigation_meme">Meme</string>
     <string name="bottom_navigation_favourite">Favourite</string>
+
+    <string name="search">Search</string>
+    <string name="search_jokes_placeholder">Looking for jokes?</string>
+    <string name="no_jokes_found">Sorry, 404 no jokes found.</string>
 </resources>
