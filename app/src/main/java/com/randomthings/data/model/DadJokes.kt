@@ -6,8 +6,19 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class DadJokes(
     @Json(name = "results")
-    val results: List<DadJoke>
+    val results: List<DadJoke>,
 
+    @Json(name = "current_page")
+    val currentPage: Int,
+
+    @Json(name = "limit")
+    val limit: Int,
+
+    @Json(name = "next_page")
+    val nextPage: Int,
+
+    @Json(name = "previous_page")
+    val previousPage: Int,
 )
 
 @JsonClass(generateAdapter = true)

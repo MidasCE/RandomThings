@@ -8,6 +8,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.randomthings.presentation.favourite.FavouriteScreen
 import com.randomthings.presentation.favourite.FavouriteViewModel
+import com.randomthings.presentation.jokes.JokesScreen
+import com.randomthings.presentation.jokes.JokesViewModel
 import com.randomthings.presentation.meme.MemeScreen
 import com.randomthings.presentation.meme.MemeViewModel
 import com.randomthings.presentation.random.RandomScreen
@@ -36,6 +38,10 @@ fun AppNavHost(
         composable(route = Favourite.route) {
             val viewModel: FavouriteViewModel = hiltViewModel(key = FavouriteViewModel.TAG)
             FavouriteScreen(modifier, viewModel)
+        }
+        composable(route = Joke.route) {
+            val viewModel: JokesViewModel = hiltViewModel(key = JokesViewModel.TAG)
+            JokesScreen(modifier, viewModel)
         }
     }
 }

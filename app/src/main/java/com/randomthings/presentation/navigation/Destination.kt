@@ -5,9 +5,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChatBubble
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.SentimentSatisfied
 import androidx.compose.material.icons.outlined.ChatBubble
 import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.SentimentSatisfied
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.randomthings.R
 
@@ -46,5 +48,13 @@ object Favourite : Destination {
     override val unselectedIcon = Icons.Outlined.Favorite
 }
 
+object Joke : Destination {
+    override val route = "joke"
+    override val stringTitleResource: Int
+        get() = R.string.bottom_navigation_joke
+    override val selectedIcon = Icons.Filled.SentimentSatisfied
+    override val unselectedIcon = Icons.Outlined.SentimentSatisfied
+}
+
 // Screens to be displayed in the Bottom Bar
-val bottomBarScreens = listOf(Home, Meme, Favourite)
+val bottomBarScreens = listOf(Home, Meme, Favourite, Joke)
