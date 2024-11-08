@@ -19,6 +19,9 @@ data class DadJokes(
 
     @Json(name = "previous_page")
     val previousPage: Int,
+
+    @Json(name = "total_pages")
+    val totalPages: Int,
 )
 
 @JsonClass(generateAdapter = true)

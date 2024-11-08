@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.viewModelScope
 import com.randomthings.domain.entity.ImageContent
 import com.randomthings.domain.entity.Joke
+import com.randomthings.domain.entity.JokeContent
 import com.randomthings.domain.joke.JokesContentUsecase
 import com.randomthings.presentation.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,8 +16,10 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
@@ -27,15 +30,18 @@ class JokesViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     private val _query = MutableStateFlow("")
-    private val _jokesSearchResult = MutableStateFlow<List<Joke>>(emptyList())
+    private val _jokesSearchResult = MutableStateFlow<List<Joke>>(listOf())
 
     val jokesSearchResult = _jokesSearchResult.asStateFlow()
     val query = _query.asStateFlow()
 
+    private var _availablePages : Int = 0
+    private var _currentPage = 1
+    private var _nextPage = 1
+
     companion object {
         const val TAG = "JokesViewModel"
     }
-    private var currentPage = 1
 
     private val queryFlow = MutableSharedFlow<String>(
         replay = 0,
@@ -47,16 +53,20 @@ class JokesViewModel @Inject constructor(
         queryFlow.debounce(500)
             .distinctUntilChanged()
             .mapLatest {
-                currentPage = 1
+                _currentPage = 1
+                _nextPage = 1
                 if (it.isEmpty() || it.isBlank())
                 {
-                    return@mapLatest flowOf(emptyList<Joke>())
+                    return@mapLatest emptyFlow()
                 }
-                return@mapLatest jokesContentUsecase.searchJokes(1, 20, it)
+                return@mapLatest jokesContentUsecase.searchJokes(_currentPage, 20, it)
             }
             .onEach {
-                it.collect { result ->
-                    _jokesSearchResult.value = result
+                it.collect { jokeContent ->
+                    _currentPage = jokeContent.currentPage
+                    _nextPage = jokeContent.nextPage
+                    _availablePages = jokeContent.totalPages
+                    _jokesSearchResult.value = jokeContent.jokes
                 }
             }
             .catch { e ->
@@ -68,5 +78,28 @@ class JokesViewModel @Inject constructor(
     fun searchJokes(query: String) {
         _query.value = query
         queryFlow.tryEmit(query)
+    }
+
+    fun fetchNextPage() {
+        if (_nextPage > _availablePages)
+        {
+            return
+        }
+
+        launchNetwork(
+            error = { e ->
+                Log.e("ERROR", e.message.orEmpty());
+            }
+        ) {
+            jokesContentUsecase.searchJokes(_currentPage, 20, _query.value)
+                .collect {
+                    _currentPage = it.currentPage
+                    _nextPage = it.nextPage
+                    _availablePages = it.totalPages
+                    val concatList = _jokesSearchResult.value.toMutableList()
+                    concatList.addAll(it.jokes)
+                    _jokesSearchResult.value = concatList.toList()
+                }
+        }
     }
 }
