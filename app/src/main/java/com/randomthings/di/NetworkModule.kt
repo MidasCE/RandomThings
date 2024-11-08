@@ -28,6 +28,7 @@ class NetworkModule {
     fun provideApiOkHttpClient(
     ): OkHttpClient = OkHttpClient.Builder()
         .addInterceptor(getHttpLoggingInterceptor())
+        .addInterceptor(getHttpLoggingInterceptor())
         .build()
 
     @Provides

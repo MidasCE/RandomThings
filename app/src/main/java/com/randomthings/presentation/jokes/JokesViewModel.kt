@@ -59,7 +59,9 @@ class JokesViewModel @Inject constructor(
                     _jokesSearchResult.value = result
                 }
             }
-            .catch {  }
+            .catch { e ->
+                Log.e("ERROR", e.message.orEmpty());
+            }
             .launchIn(viewModelScope)
     }
 
