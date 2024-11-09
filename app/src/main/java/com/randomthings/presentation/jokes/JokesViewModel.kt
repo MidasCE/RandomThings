@@ -91,14 +91,16 @@ class JokesViewModel @Inject constructor(
                 Log.e("ERROR", e.message.orEmpty());
             }
         ) {
-            jokesContentUsecase.searchJokes(_currentPage, 20, _query.value)
+            jokesContentUsecase.searchJokes(_nextPage, 20, _query.value)
                 .collect {
                     _currentPage = it.currentPage
                     _nextPage = it.nextPage
                     _availablePages = it.totalPages
                     val concatList = _jokesSearchResult.value.toMutableList()
                     concatList.addAll(it.jokes)
-                    _jokesSearchResult.value = concatList.toList()
+                    _jokesSearchResult.value = concatList.distinctBy { joke ->
+                        joke.id
+                    }.toList()
                 }
         }
     }

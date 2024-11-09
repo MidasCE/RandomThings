@@ -38,7 +38,7 @@ fun JokesScreen(modifier: Modifier = Modifier, viewModel: JokesViewModel) {
     ) {
         EndlessLazyColumn(
             modifier = Modifier.padding(it),
-            verticalArrangement = Arrangement.SpaceBetween,
+            verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             loadMore = { viewModel.fetchNextPage() }
         ) {
