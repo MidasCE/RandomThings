@@ -25,7 +25,7 @@ fun JokesScreen(modifier: Modifier = Modifier, viewModel: JokesViewModel) {
         modifier = modifier,
         topBar = {
             SearchBar(
-                modifier = Modifier,
+                modifier = Modifier.padding(8.dp),
                 query = query,
                 onQueryChange = { viewModel.searchJokes(it) },
                 onSearch = { },
@@ -63,7 +63,7 @@ private fun JokesScreenPreview() {
         modifier = Modifier,
         topBar = {
             SearchBar(
-                modifier = Modifier,
+                modifier = Modifier.padding(8.dp),
                 query = "",
                 onQueryChange = { },
                 onSearch = { },

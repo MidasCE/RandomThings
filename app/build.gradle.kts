@@ -115,7 +115,12 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(libs.lottie.compose)
 
+
+    // Unit Test
     testImplementation(libs.junit)
+    testImplementation(libs.mockk)
+    testImplementation(libs.coroutines.test)
+
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 }
