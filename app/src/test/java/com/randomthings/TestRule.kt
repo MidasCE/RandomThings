@@ -1,5 +1,8 @@
 package com.randomthings
 
+import android.util.Log
+import io.mockk.every
+import io.mockk.mockkStatic
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestDispatcher
@@ -15,6 +18,12 @@ class TestRule(private val dispatcher: TestDispatcher = UnconfinedTestDispatcher
     override fun starting(description: Description?) {
         super.starting(description)
         Dispatchers.setMain(dispatcher)
+
+        mockkStatic(Log::class)
+        every { Log.v(any(), any()) } returns 0
+        every { Log.d(any(), any()) } returns 0
+        every { Log.i(any(), any()) } returns 0
+        every { Log.e(any(), any()) } returns 0
     }
 
     override fun finished(description: Description?) {
