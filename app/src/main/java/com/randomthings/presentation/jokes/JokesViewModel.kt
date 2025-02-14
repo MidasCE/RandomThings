@@ -2,7 +2,6 @@ package com.randomthings.presentation.jokes
 
 import android.util.Log
 import androidx.lifecycle.viewModelScope
-import com.randomthings.AppDispatcher
 import com.randomthings.domain.entity.Joke
 import com.randomthings.domain.joke.JokesContentUsecase
 import com.randomthings.presentation.base.BaseViewModel

@@ -1,9 +1,9 @@
-package com.randomthings
+package com.randomthings.presentation.jokes
 
 import android.util.Log
+import com.randomthings.TestRule
 import com.randomthings.domain.entity.JokeContent
 import com.randomthings.domain.joke.JokesContentUsecase
-import com.randomthings.presentation.jokes.JokesViewModel
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk

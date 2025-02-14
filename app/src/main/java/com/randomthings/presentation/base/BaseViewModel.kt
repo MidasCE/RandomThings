@@ -22,6 +22,7 @@ abstract class BaseViewModel() : ViewModel() {
                     block()
                 } catch (e: Throwable) {
                     if (e is CancellationException) return@launch
+                    error(e)
                 }
             }
         } else {
@@ -30,6 +31,7 @@ abstract class BaseViewModel() : ViewModel() {
                     block()
                 } catch (e: Throwable) {
                     if (e is CancellationException) return@launch
+                    error(e)
                 }
             }
         }
