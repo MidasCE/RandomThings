@@ -27,7 +27,11 @@ class MemeViewModel @Inject constructor(
     }
 
     fun fetchRandomMeme() {
-        launchNetwork() {
+        launchNetwork(
+            error = { e ->
+                Log.e("ERROR", e.message.orEmpty());
+            }
+        )  {
             imageContentUseCase.getRandomMemeContent()
                 .collect {
                     _randomMeme.clear()

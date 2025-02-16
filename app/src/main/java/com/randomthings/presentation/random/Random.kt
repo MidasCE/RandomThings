@@ -8,6 +8,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,6 +38,10 @@ fun RandomScreen(modifier: Modifier = Modifier, viewModel: RandomThingViewModel)
             viewModel.refreshData();
             isRefreshing = false
         }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.initialize()
     }
 
     if (viewModel.randomImages.isEmpty())

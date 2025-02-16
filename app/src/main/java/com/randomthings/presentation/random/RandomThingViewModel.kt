@@ -25,7 +25,7 @@ class RandomThingViewModel @Inject constructor(
         const val MAX_PAGE = 100
     }
 
-    init {
+    fun initialize() {
         randomSetNumber()
         fetchRandomContent()
     }
