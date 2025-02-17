@@ -41,7 +41,7 @@ fun RandomScreen(modifier: Modifier = Modifier, viewModel: RandomThingViewModel)
     }
 
     LaunchedEffect(Unit) {
-        viewModel.initialize()
+        viewModel.refreshData()
     }
 
     if (viewModel.randomImages.isEmpty())

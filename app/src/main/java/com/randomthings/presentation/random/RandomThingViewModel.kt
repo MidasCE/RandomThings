@@ -25,11 +25,6 @@ class RandomThingViewModel @Inject constructor(
         const val MAX_PAGE = 100
     }
 
-    fun initialize() {
-        randomSetNumber()
-        fetchRandomContent()
-    }
-
     fun refreshData() {
         currentPageIndex = 0
         _randomImages.clear()

@@ -47,13 +47,13 @@ class RandomThingViewModelTest {
     }
 
     @Test
-    fun `initialize should fetchRandomContent`(): Unit = runTest {
+    fun `refreshData should fetchRandomContent`(): Unit = runTest {
         val returnContent = ImageContent.RandomImageContent("id", "author", 10, 10, "url", "downloadUrl", true)
 
         coEvery { imageContentUseCase.getRandomImageContents(any(), any()) } returns flow { emit(listOf(returnContent)) }
 
         // Act
-        viewModel.initialize()
+        viewModel.refreshData()
 
         // Assert
         coVerify { imageContentUseCase.getRandomImageContents(any(), any()) }
@@ -70,7 +70,7 @@ class RandomThingViewModelTest {
 
 
         // Act
-        viewModel.initialize()
+        viewModel.refreshData()
         viewModel.toggleContentFavourite(returnContent)
 
         // Assert
@@ -88,7 +88,7 @@ class RandomThingViewModelTest {
 
 
         // Act
-        viewModel.initialize()
+        viewModel.refreshData()
         viewModel.toggleContentFavourite(returnContent)
 
         // Assert
