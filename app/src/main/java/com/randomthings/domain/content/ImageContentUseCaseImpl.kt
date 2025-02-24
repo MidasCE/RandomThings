@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.single
 import kotlinx.coroutines.flow.zip
 import java.util.Date
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class ImageContentUseCaseImpl(
     private val imageRepository: ImageRepository,
     private val memeRepository: MemeRepository,
@@ -124,7 +125,7 @@ class ImageContentUseCaseImpl(
         }
         if (content is ImageContent.MemeImageContent)
         {
-            return imageRepository.removeImageFromDB(content.postLink)
+            return memeRepository.removeImageFromDB(content.postLink)
                 .flatMapConcat {
                     favouriteRepository.removeFavourite(FavouriteDataType.Meme, content.postLink)
                 }
@@ -132,7 +133,6 @@ class ImageContentUseCaseImpl(
         return flowOf(Int.MIN_VALUE)
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     override suspend fun getAllFavouriteContents(): Flow<List<ImageContent>> {
         return favouriteRepository.getAllFavourites()
             .flatMapConcat { favouriteEntities ->
@@ -141,8 +141,8 @@ class ImageContentUseCaseImpl(
                 val memeEntities = favouriteEntities.filter { it.type == FavouriteDataType.Meme }.map { it.dataId }
 
                 imageRepository.getSavedImagesFromDB(imageEntities)
-                    .zip(memeRepository.getSavedImagesFromDB(memeEntities)) { images, orders ->
-                        images to orders
+                    .zip(memeRepository.getSavedImagesFromDB(memeEntities)) { images, memes ->
+                        images to memes
                     }
             }.map { dataPair ->
 
