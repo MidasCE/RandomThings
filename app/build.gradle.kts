@@ -12,13 +12,13 @@ android {
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.randomthings"
+        applicationId = "com.randomthingss"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "com.randomthings.HiltTestRunner"
     }
 
     buildTypes {
@@ -107,6 +107,11 @@ dependencies {
     implementation(libs.hilt.work)
     ksp(libs.hilt.compiler)
 
+    androidTestImplementation(libs.compose.test)
+    androidTestImplementation(libs.hilt.test)
+
+    kspAndroidTest(libs.hilt.android.compiler)
+
     // Work
     implementation(libs.work.runtime)
 
@@ -123,4 +128,6 @@ dependencies {
 
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    debugImplementation(libs.compose.ui.manifest)
 }
