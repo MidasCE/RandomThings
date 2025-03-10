@@ -1,7 +1,14 @@
 package com.randomthings
 
+import androidx.compose.ui.test.assert
+import androidx.compose.ui.test.hasAnyChild
+import androidx.compose.ui.test.hasAnyDescendant
+import androidx.compose.ui.test.hasTestTag
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.onChildAt
+import androidx.compose.ui.test.onChildren
 import androidx.compose.ui.test.onNodeWithText
 import com.randomthings.presentation.MainActivity
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -35,5 +42,13 @@ class HomeFeedTest {
             ) {
                 composeTestRule.onNodeWithText(titleString).isDisplayed()
             }
+
+        composeTestRule.onNode(hasTestTag("RandomThingsColumn"))
+            .onChildAt(1)
+            .assert(hasAnyDescendant(hasText("author1")))
+
+        composeTestRule.onNode(hasTestTag("RandomThingsColumn"))
+            .onChildAt(2)
+            .assert(hasAnyDescendant(hasText("author2")))
     }
 }

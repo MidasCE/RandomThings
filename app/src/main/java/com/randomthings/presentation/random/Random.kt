@@ -16,6 +16,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.randomthings.R
@@ -57,7 +58,9 @@ fun RandomScreen(modifier: Modifier = Modifier, viewModel: RandomThingViewModel)
             onRefresh = onRefresh,
         ) {
             EndlessLazyColumn(
-                modifier = modifier.fillMaxSize(),
+                modifier = modifier
+                    .testTag("RandomThingsColumn")
+                    .fillMaxSize(),
                 verticalArrangement = Arrangement.SpaceBetween,
                 horizontalAlignment = Alignment.CenterHorizontally,
                 loadMore = { viewModel.fetchRandomContent() }
