@@ -18,14 +18,14 @@ class ImageRepository @Inject constructor(
     private val dispatcher: AppDispatcher
 ) {
 
-    suspend fun getImageInfo(
+    fun getImageInfo(
         imageId: Int,
     ): Flow<Image> =
         flow {
             emit(picSumApi.getImageInfo(imageId))
         }.map { it }
 
-    suspend fun getImageInfoList(
+    fun getImageInfoList(
         page: Int,
         limit: Int,
     ): Flow<List<Image>> =
@@ -33,17 +33,17 @@ class ImageRepository @Inject constructor(
             emit(picSumApi.getImageList(page, limit))
         }.map { it }
 
-    suspend fun saveImageToDB(imageEntity: ImageEntity): Flow<Long> =
+     fun saveImageToDB(imageEntity: ImageEntity): Flow<Long> =
         flow {
             emit(appDatabase.imageDao().insert(imageEntity))
         }.flowOn(dispatcher.io())
 
-    suspend fun removeImageFromDB(imageId: String): Flow<Int> =
+    fun removeImageFromDB(imageId: String): Flow<Int> =
         flow {
             emit(appDatabase.imageDao().delete(imageId))
         }.flowOn(dispatcher.io())
 
-    suspend fun getSavedImagesFromDB(imageIds: List<String>): Flow<List<ImageEntity>> =
+    fun getSavedImagesFromDB(imageIds: List<String>): Flow<List<ImageEntity>> =
         flow {
             emit(appDatabase.imageDao().getFromIds(imageIds))
         }.flowOn(dispatcher.io())

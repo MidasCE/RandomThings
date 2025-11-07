@@ -74,7 +74,7 @@ class RandomThingViewModel @Inject constructor(
                     imageContentUseCase.unFavoriteContent(content)
                 }
             callingFlow.collect {
-                val index = _randomImages.indexOf(content)
+                val index = _randomImages.indexOfFirst { it.url == content.url }
                 if (index > -1) {
                     _randomImages[index] = content.copy(
                         favourite = favourite,

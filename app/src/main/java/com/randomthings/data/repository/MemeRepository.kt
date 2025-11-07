@@ -17,23 +17,23 @@ class MemeRepository @Inject constructor(
     private val dispatcher: AppDispatcher
 ) {
 
-    suspend fun getRandomMeme(): Flow<Meme> =
+    fun getRandomMeme(): Flow<Meme> =
         flow {
             emit(memeApi.getRandomMeme())
         }.map { it }
 
 
-    suspend fun saveMemeToDB(memeEntity: MemeEntity): Flow<Long> =
+    fun saveMemeToDB(memeEntity: MemeEntity): Flow<Long> =
         flow {
             emit(appDatabase.memeDao().insert(memeEntity))
         }.flowOn(dispatcher.io())
 
-    suspend fun removeImageFromDB(postLink: String): Flow<Int> =
+    fun removeImageFromDB(postLink: String): Flow<Int> =
         flow {
             emit(appDatabase.memeDao().delete(postLink))
         }.flowOn(dispatcher.io())
 
-    suspend fun getSavedImagesFromDB(postLinks: List<String>): Flow<List<MemeEntity>> =
+    fun getSavedImagesFromDB(postLinks: List<String>): Flow<List<MemeEntity>> =
         flow {
             emit(appDatabase.memeDao().getFromPostlinks(postLinks))
         }.flowOn(dispatcher.io())

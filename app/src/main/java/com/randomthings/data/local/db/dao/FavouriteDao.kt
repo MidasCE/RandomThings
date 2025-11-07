@@ -23,4 +23,7 @@ interface FavouriteDao {
 
     @Query("SELECT EXISTS(SELECT * FROM favourites WHERE type = :type AND dataId = :dataId)")
     fun isRowIsExist(type: FavouriteDataType, dataId : String) : Boolean
+
+    @Query("DELETE FROM favourites WHERE type = :type AND dataId = :dataId")
+    suspend fun deleteByTypeAndDataId(type: FavouriteDataType, dataId: String): Int
 }

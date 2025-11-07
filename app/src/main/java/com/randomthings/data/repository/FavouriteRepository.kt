@@ -14,7 +14,7 @@ class FavouriteRepository @Inject constructor(
     private val dispatcher: AppDispatcher
 ) {
 
-    suspend fun saveAsFavourite(dataType: FavouriteDataType, dataId: String): Flow<Long> =
+    fun saveAsFavourite(dataType: FavouriteDataType, dataId: String): Flow<Long> =
         flow {
             val favouriteEntity = FavouriteEntity (
                 type = dataType,
@@ -23,21 +23,17 @@ class FavouriteRepository @Inject constructor(
             emit(appDatabase.favouriteDao().insert(favouriteEntity))
         }.flowOn(dispatcher.io())
 
-    suspend fun removeFavourite(dataType: FavouriteDataType, dataId: String): Flow<Int> =
+    fun removeFavourite(dataType: FavouriteDataType, dataId: String): Flow<Int> =
         flow {
-            val favouriteEntity = FavouriteEntity (
-                type = dataType,
-                dataId = dataId,
-            )
-            emit(appDatabase.favouriteDao().delete(favouriteEntity))
+            emit(appDatabase.favouriteDao().deleteByTypeAndDataId(dataType, dataId))
         }.flowOn(dispatcher.io())
 
-    suspend fun isFavourite(dataType: FavouriteDataType, dataId: String): Flow<Boolean> =
+    fun isFavourite(dataType: FavouriteDataType, dataId: String): Flow<Boolean> =
         flow {
             emit(appDatabase.favouriteDao().isRowIsExist(dataType, dataId))
         }.flowOn(dispatcher.io())
 
-    suspend fun getAllFavourites(): Flow<List<FavouriteEntity>> =
+    fun getAllFavourites(): Flow<List<FavouriteEntity>> =
         flow {
             emit(appDatabase.favouriteDao().getAll())
         }.flowOn(dispatcher.io())

@@ -27,7 +27,7 @@ class ImageContentUseCaseImpl(
         const val MAX_IMAGE_INDEX = 1024
     }
 
-    override suspend fun getRandomImageContent(): Flow<ImageContent> {
+    override fun getRandomImageContent(): Flow<ImageContent> {
         val randomId = (0..MAX_IMAGE_INDEX).random()
 
         return imageRepository.getImageInfo(randomId)
@@ -45,7 +45,7 @@ class ImageContentUseCaseImpl(
             }
     }
 
-    override suspend fun getRandomImageContents(page: Int, limit : Int): Flow<List<ImageContent>> {
+    override fun getRandomImageContents(page: Int, limit : Int): Flow<List<ImageContent>> {
         return imageRepository.getImageInfoList(page, limit)
             .map { list ->
                 list.map {
@@ -64,7 +64,7 @@ class ImageContentUseCaseImpl(
             }
     }
 
-    override suspend fun getRandomMemeContent(): Flow<ImageContent> {
+    override fun getRandomMemeContent(): Flow<ImageContent> {
         return memeRepository.getRandomMeme()
             .map {
                 val randomImageContent = ImageContent.MemeImageContent(
@@ -79,7 +79,7 @@ class ImageContentUseCaseImpl(
             }
     }
 
-    override suspend fun favoriteContent(content: ImageContent): Flow<Long> {
+    override fun favoriteContent(content: ImageContent): Flow<Long> {
         if (content is ImageContent.RandomImageContent)
         {
             val imageEntity = ImageEntity (
@@ -115,7 +115,7 @@ class ImageContentUseCaseImpl(
         return flowOf(Long.MIN_VALUE)
     }
 
-    override suspend fun unFavoriteContent(content: ImageContent): Flow<Int> {
+    override fun unFavoriteContent(content: ImageContent): Flow<Int> {
         if (content is ImageContent.RandomImageContent)
         {
             return imageRepository.removeImageFromDB(content.id)
@@ -133,7 +133,7 @@ class ImageContentUseCaseImpl(
         return flowOf(Int.MIN_VALUE)
     }
 
-    override suspend fun getAllFavouriteContents(): Flow<List<ImageContent>> {
+    override fun getAllFavouriteContents(): Flow<List<ImageContent>> {
         return favouriteRepository.getAllFavourites()
             .flatMapConcat { favouriteEntities ->
 
