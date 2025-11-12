@@ -16,4 +16,6 @@ interface ImageContentUseCase {
     fun unFavoriteContent(content: ImageContent): Flow<Int>
 
     fun getAllFavouriteContents(): Flow<List<ImageContent>>
+
+    fun observeFavouriteImageIds(): Flow<List<String>>
 }

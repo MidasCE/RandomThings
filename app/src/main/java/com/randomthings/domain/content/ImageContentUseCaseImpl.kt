@@ -3,13 +3,16 @@ package com.randomthings.domain.content
 import com.randomthings.data.local.db.entity.FavouriteDataType
 import com.randomthings.data.local.db.entity.ImageEntity
 import com.randomthings.data.local.db.entity.MemeEntity
+import com.randomthings.data.model.Image
 import com.randomthings.data.repository.FavouriteRepository
 import com.randomthings.data.repository.ImageRepository
 import com.randomthings.data.repository.MemeRepository
 import com.randomthings.domain.entity.ImageContent
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapConcat
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.single
@@ -31,51 +34,61 @@ class ImageContentUseCaseImpl(
         val randomId = (0..MAX_IMAGE_INDEX).random()
 
         return imageRepository.getImageInfo(randomId)
-            .map {
-                val randomImageContent = ImageContent.RandomImageContent(
-                    id = it.id,
-                    width = it.width,
-                    height = it.height,
-                    author = it.author,
-                    url = it.url,
-                    downloadUrl = it.downloadUrl,
-                    favourite = favouriteRepository.isFavourite(FavouriteDataType.Image, it.id).single(),
-                )
-                randomImageContent
+            .flatMapLatest { image ->
+
+                favouriteRepository.isFavourite(FavouriteDataType.Image, image.id)
+                    .map { isFavourite ->
+                        ImageContent.RandomImageContent(
+                            id = image.id,
+                            width = image.width,
+                            height = image.height,
+                            author = image.author,
+                            url = image.url,
+                            downloadUrl = image.downloadUrl,
+                            favourite = isFavourite,
+                        )
+                    }
             }
     }
 
     override fun getRandomImageContents(page: Int, limit : Int): Flow<List<ImageContent>> {
-        return imageRepository.getImageInfoList(page, limit)
-            .map { list ->
-                list.map {
-                    val isFavourite = favouriteRepository.isFavourite(FavouriteDataType.Image, it.id).single()
-                    val randomImageContent = ImageContent.RandomImageContent(
-                        id = it.id,
-                        width = it.width,
-                        height = it.height,
-                        author = it.author,
-                        url = it.url,
-                        downloadUrl = it.downloadUrl,
-                        favourite = isFavourite,
-                    )
-                    randomImageContent
-                }
+        val imagesFlow: Flow<List<Image>> = imageRepository.getImageInfoList(page, limit)
+
+        val favouriteIdsFlow: Flow<List<String>> = favouriteRepository.getFavouriteIdsByType(FavouriteDataType.Image)
+
+        return combine(imagesFlow, favouriteIdsFlow) { images, favouriteIds ->
+
+            images.map { image ->
+                // This is now just a simple, fast check in memory
+                val isFavourite = image.id in favouriteIds
+
+                ImageContent.RandomImageContent(
+                    id = image.id,
+                    width = image.width,
+                    height = image.height,
+                    author = image.author,
+                    url = image.url,
+                    downloadUrl = image.downloadUrl,
+                    favourite = isFavourite
+                )
             }
+        }
     }
 
     override fun getRandomMemeContent(): Flow<ImageContent> {
         return memeRepository.getRandomMeme()
-            .map {
-                val randomImageContent = ImageContent.MemeImageContent(
-                    postLink = it.postLink,
-                    author = it.author,
-                    title = it.title,
-                    url = it.url,
-                    nsfw = it.nsfw,
-                    favourite = favouriteRepository.isFavourite(FavouriteDataType.Meme, it.postLink).single(),
-                )
-                randomImageContent
+            .flatMapLatest { meme ->
+                favouriteRepository.isFavourite(FavouriteDataType.Meme, meme.postLink)
+                    .map { isFavourite ->
+                        ImageContent.MemeImageContent(
+                            postLink = meme.postLink,
+                            author = meme.author,
+                            title = meme.title,
+                            url = meme.url,
+                            nsfw = meme.nsfw,
+                            favourite = isFavourite,
+                        )
+                    }
             }
     }
 
@@ -163,7 +176,7 @@ class ImageContentUseCaseImpl(
                                 author = it.author,
                                 url = it.url,
                                 downloadUrl = it.downloadUrl,
-                                favourite = favouriteRepository.isFavourite(FavouriteDataType.Image, it.id).single(),
+                                favourite = true
                             )
                             is MemeEntity -> ImageContent.MemeImageContent(
                                 postLink = it.postLink,
@@ -171,12 +184,16 @@ class ImageContentUseCaseImpl(
                                 nsfw = it.nsfw,
                                 author = it.author,
                                 url = it.url,
-                                favourite = favouriteRepository.isFavourite(FavouriteDataType.Meme, it.postLink).single(),
+                                favourite = true
                             )
                             else -> error("")
                         }
                     }
             }
+    }
+
+    override fun observeFavouriteImageIds(): Flow<List<String>> {
+        return favouriteRepository.getFavouriteIdsByType(FavouriteDataType.Image)
     }
 
 }

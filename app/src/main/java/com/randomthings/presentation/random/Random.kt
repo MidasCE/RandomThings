@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
@@ -16,6 +17,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -39,10 +41,6 @@ fun RandomScreen(modifier: Modifier = Modifier, viewModel: RandomThingViewModel)
             viewModel.refreshData();
             isRefreshing = false
         }
-    }
-
-    LaunchedEffect(Unit) {
-        viewModel.refreshData()
     }
 
     if (viewModel.randomImages.isEmpty())
@@ -81,43 +79,54 @@ fun RandomScreen(modifier: Modifier = Modifier, viewModel: RandomThingViewModel)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview()
+@Preview(showBackground = true)
 @Composable
 private fun RandomScreenPreview() {
-    val pullRefreshState = rememberPullToRefreshState()
-    var isRefreshing by remember { mutableStateOf(false) }
 
-    val onRefresh: () -> Unit = {
-        isRefreshing = true
-    }
-
-    val content = ImageContent.RandomImageContent(
-        id = "1",
-        author = "Test Long Long Long Author",
-        width = 512,
-        height = 256,
-        url = "https://fastly.picsum.photos/id/176/",
-        downloadUrl = "https://fastly.picsum.photos/id/176/",
-        favourite = false,
+    val packageName = LocalContext.current.packageName
+    val localImageUri = "android.resource://$packageName/${R.drawable.placeholder}"
+    // A list of dummy data
+    val dummyContentList = listOf(
+        ImageContent.RandomImageContent(
+            id = "1",
+            author = "Test Long Long Long Author",
+            width = 512,
+            height = 256,
+            url = localImageUri,
+            downloadUrl = localImageUri,
+            favourite = false,
+        ),
+        ImageContent.RandomImageContent(
+            id = "2",
+            author = "Another Favourited Author",
+            width = 512,
+            height = 256,
+            url = localImageUri,
+            downloadUrl = localImageUri,
+            favourite = true, // <-- Show a favourited item
+        ),
+        ImageContent.RandomImageContent(
+            id = "3",
+            author = "The Third Author",
+            width = 512,
+            height = 256,
+            url = localImageUri,
+            downloadUrl = localImageUri,
+            favourite = false,
+        )
     )
 
-    PullToRefreshBox(
-        state = pullRefreshState,
-        isRefreshing = isRefreshing,
-        onRefresh = onRefresh,
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.SpaceBetween,
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            items(1) {
-                RandomThingItem(
-                    item = content,
-                    modifier = Modifier.fillMaxWidth(),
-                    favouriteClick = { }
-                )
-            }
+
+        items(dummyContentList) { content ->
+            RandomThingItem(
+                item = content,
+                modifier = Modifier.fillMaxWidth(),
+                favouriteClick = { }
+            )
         }
     }
 }

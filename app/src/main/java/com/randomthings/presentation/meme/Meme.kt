@@ -8,6 +8,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,18 +29,13 @@ import kotlinx.coroutines.launch
 @Composable
 fun MemeScreen(modifier: Modifier = Modifier, viewModel: MemeViewModel) {
     val pullRefreshState = rememberPullToRefreshState()
-    var isRefreshing by remember { mutableStateOf(false) }
-    val coroutineScope = rememberCoroutineScope()
 
-    val onRefresh: () -> Unit = {
-        isRefreshing = true
-        coroutineScope.launch {
-            viewModel.fetchRandomMeme();
-            isRefreshing = false
-        }
-    }
+    val meme by viewModel.randomMeme.collectAsState()
+    val isRefreshing by viewModel.isRefreshing.collectAsState()
+    val onRefresh: () -> Unit = viewModel::fetchRandomMeme
+    val currentMeme = meme
 
-    if (viewModel.randomMemes.isEmpty())
+    if (currentMeme == null)
     {
         LoadingView(
             modifier = modifier.fillMaxSize(),
@@ -58,11 +54,11 @@ fun MemeScreen(modifier: Modifier = Modifier, viewModel: MemeViewModel) {
                 item(key = "TopBarTitle") {
                     TopBarTitle(title = stringResource(R.string.top_bar_title_meme))
                 }
-                items(viewModel.randomMemes.size) {
+                item(key = currentMeme.postLink) {
                     MemeItem(
-                        item = viewModel.randomMemes[it] as ImageContent.MemeImageContent,
+                        item = currentMeme,
                         modifier = Modifier.fillMaxWidth(),
-                        favouriteClick = { viewModel.toggleContentFavourite(it) }
+                        favouriteClick = { viewModel.toggleContentFavourite() }
                     )
                 }
             }

@@ -24,6 +24,7 @@ constraintlayoutCompose = "1.0.1"
 mockk = "1.13.13"
 coroutines-test = "1.9.0"
 compose-test = "1.7.8"
+foundation = "1.9.4"
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -105,3 +106,4 @@ compose-test = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "c
 compose-ui-manifest = { module = "androidx.compose.ui:ui-test-manifest", version.ref = "compose-test"}
 
 hilt-test = { module = "com.google.dagger:hilt-android-testing", version.ref = "hilt"}
+androidx-foundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "foundation" }

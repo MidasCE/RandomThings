@@ -20,6 +20,7 @@ class FavouriteRepository @Inject constructor(
                 type = dataType,
                 dataId = dataId,
             )
+            // This calls the 'suspend fun insert(...)' in the DAO
             emit(appDatabase.favouriteDao().insert(favouriteEntity))
         }.flowOn(dispatcher.io())
 
@@ -29,12 +30,14 @@ class FavouriteRepository @Inject constructor(
         }.flowOn(dispatcher.io())
 
     fun isFavourite(dataType: FavouriteDataType, dataId: String): Flow<Boolean> =
-        flow {
-            emit(appDatabase.favouriteDao().isRowIsExist(dataType, dataId))
-        }.flowOn(dispatcher.io())
+        appDatabase.favouriteDao().isRowIsExist(dataType, dataId)
+            .flowOn(dispatcher.io())
 
     fun getAllFavourites(): Flow<List<FavouriteEntity>> =
-        flow {
-            emit(appDatabase.favouriteDao().getAll())
-        }.flowOn(dispatcher.io())
+        appDatabase.favouriteDao().getAll()
+            .flowOn(dispatcher.io())
+
+    fun getFavouriteIdsByType(type: FavouriteDataType): Flow<List<String>> =
+        appDatabase.favouriteDao().getFavouriteIdsByType(type)
+            .flowOn(dispatcher.io())
 }

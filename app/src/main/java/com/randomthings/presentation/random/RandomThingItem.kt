@@ -15,12 +15,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import com.randomthings.R
 import com.randomthings.domain.entity.ImageContent
 import com.randomthings.presentation.common.NetworkImage
 
@@ -77,7 +79,9 @@ fun RandomThingItem(
                 start.linkTo(parent.start, 16.dp)
                 top.linkTo(parent.top, 16.dp)
                 end.linkTo(parent.end, 16.dp)
-                width = Dimension.preferredWrapContent
+                // This tells it to fill the space between the start/end margins.
+                // To prevent Coil error state
+                width = Dimension.fillToConstraints
                 height = Dimension.value(imageHeight);
             }
         )
@@ -111,9 +115,34 @@ fun RandomThingItem(
     }
 }
 
-@Preview()
+@Preview(name = "Item - Default", showBackground = true)
 @Composable
-private fun RandomThingItemPreview() {
+private fun RandomThingItemDefaultPreview() {
+    val context = LocalContext.current
+    val localImageUri = "android.resource://${context.packageName}/${R.drawable.placeholder}"
+
+    val content = ImageContent.RandomImageContent(
+        id = "1",
+        author = "Author : This is Sheryl",
+        width = 512,
+        height = 256,
+        url = localImageUri,
+        downloadUrl = localImageUri,
+        favourite = false,
+    )
+
+    Surface {
+        RandomThingItem(
+            modifier = Modifier,
+            item = content,
+            favouriteClick = {},
+        )
+    }
+}
+
+@Preview(name = "Item - Favourited", showBackground = true)
+@Composable
+private fun RandomThingItemFavouritedPreview() {
     val content = ImageContent.RandomImageContent(
         id = "1",
         author = "Author : This is Sheryl",
@@ -121,11 +150,14 @@ private fun RandomThingItemPreview() {
         height = 256,
         url = "https://fastly.picsum.photos/id/176/",
         downloadUrl = "https://fastly.picsum.photos/id/176/",
-        favourite = false,
+        favourite = true, // <-- Set to true
     )
-    RandomThingItem(
-        modifier = Modifier,
-        item = content,
-        favouriteClick = {},
-    )
+
+    Surface {
+        RandomThingItem(
+            modifier = Modifier,
+            item = content,
+            favouriteClick = {},
+        )
+    }
 }

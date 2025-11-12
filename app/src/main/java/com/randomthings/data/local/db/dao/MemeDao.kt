@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import com.randomthings.data.local.db.entity.MemeEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface MemeDao {
@@ -17,8 +18,8 @@ interface MemeDao {
     //return long, which is the new rowId for the inserted item
 
     @Query("SELECT * FROM memes")
-    fun getAll(): List<MemeEntity>
+    fun getAll(): Flow<List<MemeEntity>>
 
     @Query("SELECT * FROM memes where postLink in(:postLinks)")
-    fun getFromPostlinks(postLinks: List<String>) : List<MemeEntity>
+    fun getFromPostlinks(postLinks: List<String>) : Flow<List<MemeEntity>>
 }
