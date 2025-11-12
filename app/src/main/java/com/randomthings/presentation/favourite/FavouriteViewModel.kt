@@ -36,4 +36,30 @@ class FavouriteViewModel @Inject constructor(
         }
     }
 
+
+    fun toggleContentFavourite(imageContent: ImageContent) {
+        launchNetwork(
+            error = { e ->
+                Log.e("ERROR", e.message.orEmpty());
+            }
+        ) {
+            val favourite = !(imageContent.favourite)
+            val callingFlow =
+                if (favourite) {
+                    imageContentUseCase.favoriteContent(imageContent)
+                } else {
+                    imageContentUseCase.unFavoriteContent(imageContent)
+                }
+            callingFlow.collect {
+                val index = favouriteContents.indexOfFirst { it.url == imageContent.url }
+                if (index > -1) {
+                    _favouriteContents[index] = when (imageContent) {
+                        is ImageContent.RandomImageContent -> imageContent.copy(favourite = favourite)
+                        is ImageContent.MemeImageContent -> imageContent.copy(favourite = favourite)
+                    }
+                }
+            }
+        }
+    }
+
 }

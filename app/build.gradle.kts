@@ -9,12 +9,12 @@ plugins {
 
 android {
     namespace = "com.randomthings"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.randomthingss"
         minSdk = 24
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -76,6 +76,7 @@ dependencies {
     implementation(libs.lifecycle.runtime)
     implementation(libs.lifecycle.runtime.compose)
     implementation(libs.lifecycle.savedstate)
+    implementation(libs.androidx.foundation)
     ksp(libs.lifecycle.compiler)
 
     // Database

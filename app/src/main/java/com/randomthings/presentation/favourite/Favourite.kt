@@ -44,7 +44,7 @@ fun FavouriteScreen(modifier: Modifier = Modifier, viewModel: FavouriteViewModel
                         RandomThingItem(
                             item = content,
                             modifier = Modifier.fillMaxWidth(),
-                            favouriteClick = {  }
+                            favouriteClick = { viewModel.toggleContentFavourite(it) }
                         )
                     }
 
@@ -52,7 +52,7 @@ fun FavouriteScreen(modifier: Modifier = Modifier, viewModel: FavouriteViewModel
                         MemeItem (
                             item = content,
                             modifier = Modifier.fillMaxWidth(),
-                            favouriteClick = {  }
+                            favouriteClick = { viewModel.toggleContentFavourite(it) }
                         )
                 }
             }

@@ -20,4 +20,5 @@ class Converters {
 
     @TypeConverter
     fun fromFavouriteDataType(value: FavouriteDataType) = value.name
+
 }

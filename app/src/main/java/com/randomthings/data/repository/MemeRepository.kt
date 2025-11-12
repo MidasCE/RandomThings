@@ -20,7 +20,7 @@ class MemeRepository @Inject constructor(
     fun getRandomMeme(): Flow<Meme> =
         flow {
             emit(memeApi.getRandomMeme())
-        }.map { it }
+        }.flowOn(dispatcher.io())
 
 
     fun saveMemeToDB(memeEntity: MemeEntity): Flow<Long> =
@@ -34,7 +34,6 @@ class MemeRepository @Inject constructor(
         }.flowOn(dispatcher.io())
 
     fun getSavedImagesFromDB(postLinks: List<String>): Flow<List<MemeEntity>> =
-        flow {
-            emit(appDatabase.memeDao().getFromPostlinks(postLinks))
-        }.flowOn(dispatcher.io())
+        appDatabase.memeDao().getFromPostlinks(postLinks)
+            .flowOn(dispatcher.io())
 }
