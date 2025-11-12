@@ -1,5 +1,13 @@
 # 📸 Random Things - The Random Image Gallery App
 
+<img width="320" height="714" alt="Screenshot_20251112_144017" src="https://github.com/user-attachments/assets/b60c9c9a-89d5-4359-9273-c6f228e08899" />
+
+<img width="320" height="714" alt="Screenshot_20251112_144035" src="https://github.com/user-attachments/assets/324d4dbd-ec3e-47ff-9d4e-e46b6492e627" />
+
+<img width="320" height="714" alt="Screenshot_20251112_144456" src="https://github.com/user-attachments/assets/9a049d3c-6e28-4d4e-b079-d6ea8b3b2288" />
+
+
+
 An elegant and modern Android application built with Jetpack Compose, showcasing a clean architecture, asynchronous programming with Kotlin Coroutines and Flows, robust unit testing, and efficient network communication with Retrofit. This app allows users to browse random images, discover memes, and enjoy dad jokes.
 
 ## ✨ Features
@@ -28,6 +36,7 @@ An elegant and modern Android application built with Jetpack Compose, showcasing
 * **Architecture:** Adhering to a modern MVVM (Model-View-ViewModel) pattern with a clear separation of concerns (UI, ViewModel, UseCases/Interactors, Repository, Data Sources).
 
 ## 🏗️ Architecture
+
 
 The app follows a layered architectural approach to ensure scalability, maintainability, and testability:
 
