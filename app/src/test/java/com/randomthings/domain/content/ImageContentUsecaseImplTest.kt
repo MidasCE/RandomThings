@@ -123,18 +123,20 @@ class ImageContentUsecaseImplTest {
                 author = repoImage2.author,
                 url = repoImage2.url,
                 downloadUrl = repoImage2.downloadUrl,
-                favourite = true,
+                favourite = false,
             ),
         )
 
+        coEvery { favouriteRepository.getFavouriteIdsByType(FavouriteDataType.Image) } returns flowOf(listOf("id1"))
+
         coEvery { imageRepository.getImageInfoList(any(), any()) } returns flow { emit(listOf(repoImage1, repoImage2)) }
-        coEvery { favouriteRepository.isFavourite(any(), any()) } returns flow { emit(true) }
 
         // Act
         val result = viewModel.getRandomImageContents(1, 10)
 
         // Assert
         coVerify { imageRepository.getImageInfoList(any(), any()) }
+        coVerify { favouriteRepository.getFavouriteIdsByType(FavouriteDataType.Image) }
         assertEquals(expectedResult, result.single())
     }
 
