@@ -3,6 +3,8 @@ package com.randomthings.presentation.meme
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
@@ -13,13 +15,16 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.constraintlayout.compose.ChainStyle
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.randomthings.domain.entity.ImageContent
@@ -67,18 +72,24 @@ fun MemeItem(
     modifier: Modifier = Modifier,
     item: ImageContent.MemeImageContent,
     favouriteClick: (ImageContent.MemeImageContent) -> Unit,
+    maxWidth : Dp = 600.dp,
 ) {
     ConstraintLayout (
         modifier = modifier
-            .fillMaxWidth()
+            .widthIn(max = maxWidth)
             .background(color = MaterialTheme.colorScheme.background)
     ) {
         val (image, titleView, favouriteIcon) = createRefs()
+        createHorizontalChain(favouriteIcon, titleView, chainStyle = ChainStyle.Packed)
         MemeImage(
             item = item,
             modifier = Modifier.constrainAs(image) {
-                top.linkTo(parent.top, 16.dp)
-            }.fillMaxWidth(),
+                    start.linkTo(parent.start, 16.dp)
+                    top.linkTo(parent.top, 16.dp)
+                    end.linkTo(parent.end, 16.dp)
+                }
+                .clip(RoundedCornerShape(12.dp))
+            ,
             contentScale = ContentScale.FillWidth
         )
         MemeDetail(
