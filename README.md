@@ -6,7 +6,7 @@ A modern Android app built with Jetpack Compose, featuring four uniquely themed 
 
 | Discovery | Daily Memes Stack | My Collection | Dad Joke Hub |
 |:---------:|:-----------------:|:-------------:|:------------:|
-| <img width="180" src="https://github.com/user-attachments/assets/f7f57d71-bee7-40c8-a54f-a420d93d59cc"> | <img width="180" src="https://github.com/user-attachments/assets/57689a5f-92b3-45e2-a91d-67eb08cb57d1"> | <img width="180" src="https://github.com/user-attachments/assets/82e8bea7-da06-437b-8ecc-bb7c781b1fa8"> | <img width="180" src="[https://github.com/user-attachments/assets/f7f57d71-bee7-40c8-a54f-a420d93d59cc](https://github.com/user-attachments/assets/cd580154-1b30-4731-a5db-5090a240aad9)"> |
+| <img width="180" src="https://github.com/user-attachments/assets/f7f57d71-bee7-40c8-a54f-a420d93d59cc"> | <img width="180" src="https://github.com/user-attachments/assets/57689a5f-92b3-45e2-a91d-67eb08cb57d1"> | <img width="180" src="https://github.com/user-attachments/assets/82e8bea7-da06-437b-8ecc-bb7c781b1fa8"> | <img width="180" src="https://github.com/user-attachments/assets/cd580154-1b30-4731-a5db-5090a240aad9"> |
 
 > To get image URLs: drag each screenshot into any GitHub issue or PR comment box, copy the generated `https://github.com/user-attachments/...` URL, then paste it above.
 
