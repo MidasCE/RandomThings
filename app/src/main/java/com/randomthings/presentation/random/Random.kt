@@ -1,15 +1,18 @@
 package com.randomthings.presentation.random
 
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -17,16 +20,19 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import com.randomthings.R
 import com.randomthings.domain.entity.ImageContent
 import com.randomthings.presentation.common.list.EndlessLazyColumn
 import com.randomthings.presentation.loader.LoadingView
-import com.randomthings.presentation.topbar.TopBarTitle
+import com.randomthings.presentation.theme.HomeGreetingOrange
+import com.randomthings.presentation.theme.HomePeachBackground
 import kotlinx.coroutines.launch
+import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -35,98 +41,96 @@ fun RandomScreen(modifier: Modifier = Modifier, viewModel: RandomThingViewModel)
     var isRefreshing by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
 
+    val greeting = remember {
+        val hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
+        when {
+            hour < 12 -> R.string.greeting_morning
+            hour < 17 -> R.string.greeting_afternoon
+            else -> R.string.greeting_evening
+        }
+    }
+
     val onRefresh: () -> Unit = {
         isRefreshing = true
         coroutineScope.launch {
-            viewModel.refreshData();
+            viewModel.refreshData()
             isRefreshing = false
         }
     }
 
-    if (viewModel.randomImages.isEmpty())
-    {
-        LoadingView(
-            modifier = modifier.fillMaxSize(),
-            loading = true)
-    } else
-    {
-        PullToRefreshBox(
-            state = pullRefreshState,
-            isRefreshing = isRefreshing,
-            onRefresh = onRefresh,
-        ) {
-            EndlessLazyColumn(
-                modifier = modifier
-                    .testTag("RandomThingsColumn")
-                    .fillMaxSize(),
-                verticalArrangement = Arrangement.SpaceBetween,
-                horizontalAlignment = Alignment.CenterHorizontally,
-                loadMore = { viewModel.fetchRandomContent() }
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .background(HomePeachBackground),
+    ) {
+        if (viewModel.randomImages.isEmpty()) {
+            LoadingView(
+                modifier = Modifier.fillMaxSize(),
+                loading = true,
+            )
+        } else {
+            PullToRefreshBox(
+                state = pullRefreshState,
+                isRefreshing = isRefreshing,
+                onRefresh = onRefresh,
             ) {
-                item(key = "TopBarTitle") {
-                    TopBarTitle(title = stringResource(R.string.top_bar_title_home))
-                }
-                items(viewModel.randomImages.size) { randomImageIndex ->
-                    RandomThingItem(
-                        item = viewModel.randomImages[randomImageIndex] as ImageContent.RandomImageContent,
-                        modifier = Modifier.fillMaxWidth(),
-                        favouriteClick = { viewModel.toggleContentFavourite(it) }
-                    )
+                EndlessLazyColumn(
+                    modifier = Modifier
+                        .testTag("RandomThingsColumn")
+                        .fillMaxSize()
+                        .statusBarsPadding(),
+                    verticalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(4.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    loadMore = { viewModel.fetchRandomContent() },
+                ) {
+                    item(key = "header") {
+                        DiscoveryHeader(
+                            greetingRes = greeting,
+                        )
+                    }
+                    items(viewModel.randomImages.size) { index ->
+                        val item = viewModel.randomImages[index] as ImageContent.RandomImageContent
+                        if (index == 0) {
+                            FeaturedImageCard(
+                                item = item,
+                                modifier = Modifier.fillMaxWidth(),
+                                favouriteClick = { viewModel.toggleContentFavourite(it) },
+                            )
+                        } else {
+                            DiscoveryImageCard(
+                                item = item,
+                                modifier = Modifier.fillMaxWidth(),
+                                favouriteClick = { viewModel.toggleContentFavourite(it) },
+                            )
+                        }
+                    }
                 }
             }
         }
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Preview(showBackground = true)
 @Composable
-private fun RandomScreenPreview() {
-
-    val packageName = LocalContext.current.packageName
-    val localImageUri = "android.resource://$packageName/${R.drawable.placeholder}"
-    // A list of dummy data
-    val dummyContentList = listOf(
-        ImageContent.RandomImageContent(
-            id = "1",
-            author = "Test Long Long Long Author",
-            width = 512,
-            height = 256,
-            url = localImageUri,
-            downloadUrl = localImageUri,
-            favourite = false,
-        ),
-        ImageContent.RandomImageContent(
-            id = "2",
-            author = "Another Favourited Author",
-            width = 512,
-            height = 256,
-            url = localImageUri,
-            downloadUrl = localImageUri,
-            favourite = true, // <-- Show a favourited item
-        ),
-        ImageContent.RandomImageContent(
-            id = "3",
-            author = "The Third Author",
-            width = 512,
-            height = 256,
-            url = localImageUri,
-            downloadUrl = localImageUri,
-            favourite = false,
-        )
-    )
-
-    LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
+private fun DiscoveryHeader(
+    greetingRes: Int,
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 20.dp, vertical = 16.dp),
     ) {
-
-        items(dummyContentList) { content ->
-            RandomThingItem(
-                item = content,
-                modifier = Modifier.fillMaxWidth(),
-                favouriteClick = { }
-            )
-        }
+        Text(
+            text = stringResource(R.string.top_bar_title_home),
+            style = MaterialTheme.typography.headlineMedium,
+            fontWeight = FontWeight.Bold,
+            color = Color(0xFF1A1A1A),
+        )
+        Text(
+            text = stringResource(greetingRes),
+            style = MaterialTheme.typography.headlineSmall,
+            fontWeight = FontWeight.SemiBold,
+            color = HomeGreetingOrange,
+            modifier = Modifier.padding(top = 4.dp),
+        )
     }
 }

@@ -355,6 +355,17 @@ class ImageContentUsecaseImplTest {
         coVerify { memeRepository.getSavedImagesFromDB(any()) }
     }
 
+    @Test
+    fun `getAllFavouriteContents should return empty list when there are no favourites`(): Unit = runTest {
+        coEvery { favouriteRepository.getAllFavourites() } returns flowOf(emptyList())
+        coEvery { imageRepository.getSavedImagesFromDB(emptyList()) } returns flowOf(emptyList())
+        coEvery { memeRepository.getSavedImagesFromDB(emptyList()) } returns flowOf(emptyList())
+
+        viewModel.getAllFavouriteContents().collect {
+            assertEquals(emptyList<ImageContent>(), it)
+        }
+    }
+
     @After
     @Throws(java.lang.Exception::class)
     fun tearDown() {
