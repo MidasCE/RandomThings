@@ -1,61 +1,62 @@
-# 📸 Random Things - The Random Image Gallery App
+# Random Things
 
-<img width="320" height="714" alt="Screenshot_20251112_144017" src="https://github.com/user-attachments/assets/b60c9c9a-89d5-4359-9273-c6f228e08899" />
+A modern Android app built with Jetpack Compose, featuring four uniquely themed screens for discovering photos, browsing memes, saving favourites, and searching dad jokes.
 
-<img width="320" height="714" alt="Screenshot_20251112_144035" src="https://github.com/user-attachments/assets/324d4dbd-ec3e-47ff-9d4e-e46b6492e627" />
+## Screenshots
 
-<img width="320" height="714" alt="Screenshot_20251112_144456" src="https://github.com/user-attachments/assets/9a049d3c-6e28-4d4e-b079-d6ea8b3b2288" />
+| Discovery | Daily Memes Stack | My Collection | Dad Joke Hub |
+|:---------:|:-----------------:|:-------------:|:------------:|
+| <img width="180" src="https://github.com/user-attachments/assets/57689a5f-92b3-45e2-a91d-67eb08cb57d1"> | <img width="180" src="https://github.com/user-attachments/assets/82e8bea7-da06-437b-8ecc-bb7c781b1fa8"> | <img width="180" src="https://github.com/user-attachments/assets/cd580154-1b30-4731-a5db-5090a240aad9"> | <img width="180" src="https://github.com/user-attachments/assets/f7f57d71-bee7-40c8-a54f-a420d93d59cc"> |
 
+> To get image URLs: drag each screenshot into any GitHub issue or PR comment box, copy the generated `https://github.com/user-attachments/...` URL, then paste it above.
 
+## Features
 
-An elegant and modern Android application built with Jetpack Compose, showcasing a clean architecture, asynchronous programming with Kotlin Coroutines and Flows, robust unit testing, and efficient network communication with Retrofit. This app allows users to browse random images, discover memes, and enjoy dad jokes.
+- **Discovery (Home):** Endless scroll of high-quality random photos. The first item is a large featured card with author credit and a "New!" badge; subsequent items appear as discovery cards. Pull-to-refresh for fresh content.
+- **Daily Memes Stack:** Dark-themed meme viewer with a 3D card stack effect. Tap the red heart FAB to favourite; tap the purple refresh FAB or pull-to-refresh for a new meme.
+- **My Collection (Favourites):** Warm beige collection screen with Photos and Memes tabs. Favourited photos are displayed in a Pinterest-style staggered grid with natural aspect ratios. Unfavouriting dims the item instead of removing it, so you can re-favourite without losing your place.
+- **Dad Joke Hub:** Sky blue gradient search screen. A "Joke of the Day" card is shown on load; search by keyword to get chat-bubble style results in four alternating colours; tap "Randomize Joke" to refresh the daily joke.
 
-## ✨ Features
+## Tech Stack
 
-* **Home Tab:** Browse an endless stream of random, high-quality images with author details.
-* **Favourites Tab:** Keep track of your most loved images by tapping the heart icon. All favourited images are persisted and accessible here.
-* **Meme Tab:** Get a fresh dose of humor with random memes fetched from a public API. Swipe to refresh for new content!
-* **Joke Tab:** Lighten the mood with dad jokes! Enter a keyword, and the app will fetch jokes related to your search.
-* **Responsive UI:** Beautifully designed and adaptive user interface built with Jetpack Compose.
-* **Offline Support (Favourites):** Favourited images are locally stored for offline viewing.
+- **Language:** Kotlin
+- **UI:** Jetpack Compose + Material3
+- **Architecture:** MVVM with Clean Architecture (UI → Domain → Data)
+- **Async:** Kotlin Coroutines & Flow (`StateFlow`, `MutableStateFlow`, `mutableStateListOf`)
+- **DI:** Hilt
+- **Networking:** Retrofit + Moshi
+- **Local storage:** Room (favourites persistence)
+- **Image loading:** Coil
+- **Testing:** JUnit 4, MockK, Coroutines Test (`StandardTestDispatcher`, `runTest`)
 
-## 🚀 Technologies Used
+## Architecture
 
-* **Kotlin:** The primary language for Android development.
-* **Jetpack Compose:** Modern toolkit for building native Android UI.
-* **Kotlin Coroutines & Flow:** For asynchronous operations, background processing, and reactive streams.
-* **Retrofit:** Type-safe HTTP client for making network requests to various APIs.
-* **Hilt:** For dependency injection (optional, but highly recommended for this architecture).
-* **Room:** For local data persistence (for favourite images).
-* **Unit Testing:**
-    * **JUnit 4/5:** Testing framework.
-    * **mockk:** For mocking dependencies in unit tests.
-    * **Coroutines Test:** For testing suspend functions and flows.
-    * **Compose Test Rule:** or testing Jetpack Compose UI components and flows.
-    * **Hilt Android Testing:** For managing dependencies in instrumentation tests.
-* **Architecture:** Adhering to a modern MVVM (Model-View-ViewModel) pattern with a clear separation of concerns (UI, ViewModel, UseCases/Interactors, Repository, Data Sources).
+```
+presentation/        # Compose screens + ViewModels (MVVM)
+domain/              # Use cases + entity models
+data/
+  remote/            # Retrofit APIs
+  local/             # Room DAOs + entities
+  repository/        # Bridges remote ↔ local ↔ domain
+```
 
-## 🏗️ Architecture
+The domain layer is fully decoupled from Android — use cases operate only on plain Kotlin entities and are unit-tested without the framework.
 
+## APIs
 
-The app follows a layered architectural approach to ensure scalability, maintainability, and testability:
+- [Lorem Picsum](https://picsum.photos/) — random photos
+- [Meme API](https://meme-api.com/gimme) — random memes
+- [icanhazdadjoke](https://icanhazdadjoke.com/api) — dad jokes
 
-* **UI Layer (Presentation):** Built with Jetpack Compose. Observes `StateFlow` from ViewModels and dispatches `Intents`/events.
-* **ViewModel Layer:** Holds UI-related data and state, exposing them to the UI. Orchestrates data fetching and business logic via Use Cases. Integrates with Kotlin Flows for reactive data streams.
-* **Domain Layer (Use Cases/Interactors):** Contains the core business logic. These are single-responsibility classes that encapsulate specific operations (e.g., `ImageContentUseCase`). They operate on data from repositories.
-* **Data Layer (Repository & Data Sources):**
-    * **Repository:** Abstracts data sources, providing a clean API to the domain layer. Responsible for deciding whether to fetch data from network or local storage.
-    * **Data Sources:**
-        * **Remote Data Source:** Handles API calls using Retrofit (e.g., , `MemeApiService`, `DadJokeApiService`).
-        * **Local Data Source:** Manages local data persistence using Room (e.g., `FavouriteImageDao`).
+## Running Tests
 
-## 🤝 Contributing
+```bash
+./gradlew test
+```
 
-Contributions are welcome! If you have any suggestions, bug reports, or want to contribute code, please feel free to open an issue or submit a pull request.
-
-## 🙏 Acknowledgements
-
-* [Lorem Picsum](https://picsum.photos/) for random images.
-* [Meme API](https://meme-api.com/gimme) for random memes.
-* [icanhazdadjoke API](https://icanhazdadjoke.com/api) for dad jokes.
-* The Android Developers community for excellent resources and documentation.
+Key test files:
+- `ImageContentUsecaseImplTest` — use case mapping and favourite logic
+- `JokesContentUsecaseImplTest` — joke search mapping and pagination
+- `RandomThingViewModelTest` — pagination guards, refresh, and reactive favourite updates
+- `FavouriteViewModelTest` — soft-unfavourite in-memory state
+- `JokesViewModelTest` — joke-of-the-day and search debounce
