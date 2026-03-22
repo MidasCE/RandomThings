@@ -8,7 +8,9 @@ import io.mockk.coVerify
 import io.mockk.mockk
 import io.mockk.unmockkAll
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
@@ -163,6 +165,55 @@ class RandomThingViewModelTest {
 
         // Assert 2: The item is marked as un-favourited
         assertFalse(viewModel.randomImages.first { it.url == testImage1.url }.favourite)
+    }
+
+    @Test
+    fun `fetchRandomContent - should be no-op when isLoadingMore is true`() = runTest {
+        // Arrange: trigger a load so _isLoadingMore becomes true before network completes
+        // We use a flow that never emits to keep loading state active
+        coEvery { imageContentUseCase.getRandomImageContents(any(), any()) } returns
+            flow { delay(Long.MAX_VALUE) }
+
+        viewModel.fetchRandomContent()
+        // isLoadingMore is now true — a second call should be ignored
+        assertTrue(viewModel.isLoadingMore.value)
+
+        // Act: second call should be a no-op
+        viewModel.fetchRandomContent()
+        testRule.dispatcher.scheduler.advanceUntilIdle()
+
+        // getRandomImageContents was called once by setUp (init) and once above — not a third time
+        coVerify(atMost = 2) { imageContentUseCase.getRandomImageContents(any(), any()) }
+    }
+
+    @Test
+    fun `refreshData - should reset page index so new pages are fetched from the start`() = runTest {
+        // Arrange: change mock to return testImage2 for the refresh call
+        coEvery { imageContentUseCase.getRandomImageContents(any(), any()) } returns flowOf(
+            listOf(testImage2)
+        )
+
+        // Act
+        viewModel.refreshData()
+        testRule.dispatcher.scheduler.advanceUntilIdle()
+
+        // Assert: list contains only testImage2, not the original testImage1 from init
+        assertEquals(listOf(testImage2), viewModel.randomImages)
+        assertFalse(viewModel.isRefreshing.value)
+    }
+
+    @Test
+    fun `observeFavoriteChanges - should not affect items not present in the list`() = runTest {
+        // Arrange: only testImage1 is in the list (added during setUp)
+        val idNotInList = "id_not_in_list"
+
+        // Act: emit a favorite id that matches no item in the list
+        favoriteIdsFlow.value = listOf(idNotInList)
+        testRule.dispatcher.scheduler.advanceUntilIdle()
+
+        // Assert: testImage1 is still not marked favourite; list size is unchanged
+        assertEquals(1, viewModel.randomImages.size)
+        assertFalse(viewModel.randomImages.first().favourite)
     }
 
     @After

@@ -1,14 +1,28 @@
 <resources>
     <string name="app_name">RandomThings</string>
-    <string name="top_bar_title_home">Nice images for you</string>
-    <string name="top_bar_title_meme">Need meme?</string>
-    <string name="top_bar_title_favourite">You seem to love it!</string>
+    <string name="top_bar_title_home">Discovery</string>
+    <string name="top_bar_title_meme">Daily Memes Stack</string>
+    <string name="top_bar_title_favourite">My Collection</string>
+    <string name="top_bar_title_joke">Dad Joke Hub</string>
     <string name="bottom_navigation_home">Home</string>
     <string name="bottom_navigation_meme">Meme</string>
     <string name="bottom_navigation_favourite">Favourite</string>
     <string name="bottom_navigation_joke">Joke</string>
 
     <string name="search">Search</string>
-    <string name="search_jokes_placeholder">Looking for jokes?</string>
-    <string name="no_jokes_found">Sorry, 404 no jokes found.</string>
+    <string name="search_jokes_placeholder">Search jokes…</string>
+    <string name="no_jokes_found">No jokes found — try another keyword!</string>
+    <string name="joke_of_the_day">Joke of the Day</string>
+    <string name="randomize_joke">Randomize Joke</string>
+    <string name="search_results">Search Results</string>
+    <string name="favourites_tab_photos">Photos</string>
+    <string name="favourites_tab_memes">Memes</string>
+    <string name="favourites_empty_photos">No photos saved yet.\nHeart some photos on the home feed!</string>
+    <string name="favourites_empty_memes">No memes saved yet.\nHeart some memes on the meme screen!</string>
+    <string name="greeting_morning">Good morning, Explorer!</string>
+    <string name="greeting_afternoon">Good afternoon, Explorer!</string>
+    <string name="greeting_evening">Good evening, Explorer!</string>
+    <string name="badge_new">New!</string>
+    <string name="meme_refresh_content_description">Get new meme</string>
+    <string name="meme_favourite_content_description">Like this meme</string>
 </resources>

@@ -2,6 +2,7 @@ package com.randomthings.presentation.jokes
 
 import android.util.Log
 import com.randomthings.TestRule
+import com.randomthings.domain.entity.Joke
 import com.randomthings.domain.entity.JokeContent
 import com.randomthings.domain.joke.JokesContentUsecase
 import io.mockk.coEvery
@@ -9,15 +10,18 @@ import io.mockk.coVerify
 import io.mockk.mockk
 import io.mockk.unmockkAll
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.runTest
 import org.junit.After
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
+import kotlin.collections.firstOrNull
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(JUnit4::class)
@@ -34,19 +38,30 @@ class JokesViewModelTest {
 
     @Before
     fun setUp() {
+        val returnContent = JokeContent(1, 2, 10, listOf(Joke("1", "jokeString")))
+        coEvery { jokesContentUsecase.searchJokes(any(), any(), any()) } returns flow { emit(returnContent) }
+
         viewModel = JokesViewModel(
             jokesContentUsecase,
         )
     }
 
     @Test
-    fun `should do nothing if query is empty`(): Unit = runTest {
+    fun `should instantiate should random joke with search on first page`(): Unit = runTest {
+        // Assert
+        coVerify(exactly = 1) { jokesContentUsecase.searchJokes(1, 1, any()) }
 
+        assertEquals(Joke("1", "jokeString"), viewModel.jokeOfTheDay.firstOrNull())
+        assertEquals(false, viewModel.isLoadingJokeOfTheDay.value)
+    }
+
+    @Test
+    fun `should do nothing if query is empty`(): Unit = runTest {
         // Act
         viewModel.searchJokes("")
 
         // Assert
-        coVerify(inverse = true) { jokesContentUsecase.searchJokes(any(), any(), any()) }
+        coVerify(exactly = 1) { jokesContentUsecase.searchJokes(any(), any(), any()) }
     }
 
     @Test
@@ -56,7 +71,7 @@ class JokesViewModelTest {
         viewModel.searchJokes("   ")
 
         // Assert
-        coVerify(inverse = true) { jokesContentUsecase.searchJokes(any(), any(), any()) }
+        coVerify(exactly = 1) { jokesContentUsecase.searchJokes(any(), any(), any()) }
     }
 
     @Test
@@ -75,19 +90,13 @@ class JokesViewModelTest {
 
     @Test
     fun `should searchJokes if query is not empty and start with first page`(): Unit = runTest {
-
         val searchTerm = "test"
-
-        val returnContent = JokeContent(1, 2, 10, emptyList())
-
-        coEvery { jokesContentUsecase.searchJokes(any(), any(), any()) } returns flow { emit(returnContent) }
-
         // Act
         viewModel.searchJokes(searchTerm)
         advanceTimeBy(501)
 
         // Assert
-        coVerify { jokesContentUsecase.searchJokes(any(), any(), any()) }
+        coVerify(exactly = 1) { jokesContentUsecase.searchJokes(1, 20, "test") }
     }
 
     @Test
@@ -96,7 +105,7 @@ class JokesViewModelTest {
         viewModel.fetchNextPage()
 
         // Assert
-        coVerify(inverse = true) { jokesContentUsecase.searchJokes(any(), any(), any()) }
+        coVerify(exactly = 1) { jokesContentUsecase.searchJokes(any(), any(), any()) }
     }
 
     @Test

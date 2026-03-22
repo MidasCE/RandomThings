@@ -6,6 +6,7 @@ import com.randomthings.domain.content.ImageContentUseCase
 import com.randomthings.domain.entity.ImageContent
 import com.randomthings.presentation.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 @HiltViewModel
@@ -22,17 +23,14 @@ class FavouriteViewModel @Inject constructor(
     val favouriteContents: List<ImageContent> = _favouriteContents
 
     fun fetchFavouriteContents() {
-        _favouriteContents.clear()
-
         launchNetwork(
             error = { e ->
                 Log.e("ERROR", e.message.orEmpty());
             }
         ) {
-            imageContentUseCase.getAllFavouriteContents()
-                .collect {
-                    _favouriteContents.addAll(it)
-                }
+            val items = imageContentUseCase.getAllFavouriteContents().first()
+            _favouriteContents.clear()
+            _favouriteContents.addAll(items)
         }
     }
 

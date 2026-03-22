@@ -32,25 +32,30 @@ class FavouriteViewModelTest {
 
     private lateinit var viewModel: FavouriteViewModel
 
+    // --- Test Data ---
+    private val testImage1 =
+        ImageContent.RandomImageContent("id1", "author1", 10, 10, "url1", "downloadUrl1", false)
+
     @Before
     fun setUp() {
         viewModel = FavouriteViewModel(
             imageContentUseCase,
         )
+
+        coEvery { imageContentUseCase.favoriteContent(any()) } returns flow { emit(1L) }
+        coEvery { imageContentUseCase.unFavoriteContent(any()) } returns flow { emit(1) }
     }
 
     @Test
     fun `should call getAllFavouriteContents from imageContentUsecase when fetchFavouriteContents`(): Unit = runTest {
-        val returnContent = ImageContent.RandomImageContent("id", "author", 10, 10, "url", "downloadUrl", true)
-
-        coEvery { imageContentUseCase.getAllFavouriteContents() } returns flow { emit(listOf(returnContent)) }
+        coEvery { imageContentUseCase.getAllFavouriteContents() } returns flow { emit(listOf(testImage1)) }
 
         // Act
         viewModel.fetchFavouriteContents()
 
         // Assert
         coVerify() { imageContentUseCase.getAllFavouriteContents() }
-        assertEquals(listOf(returnContent), viewModel.favouriteContents)
+        assertEquals(listOf(testImage1), viewModel.favouriteContents)
     }
 
     @Test
@@ -65,6 +70,54 @@ class FavouriteViewModelTest {
         coVerify { Log.e(any(), exception.message.orEmpty()) }
     }
 
+    @Test
+    fun `toggleContentFavourite should call imageContentUseCase-favoriteContent when item is not favourite`() =
+        runTest {
+            // Arrange
+            val unfavouriteImage = testImage1
+
+            coEvery { imageContentUseCase.getAllFavouriteContents() } returns flow { emit(listOf(unfavouriteImage)) }
+
+            // Act
+            viewModel.fetchFavouriteContents()
+
+            // Act
+            viewModel.toggleContentFavourite(unfavouriteImage)
+
+            // Verify the correct command was sent
+            coVerify(exactly = 1) { imageContentUseCase.favoriteContent(unfavouriteImage) }
+            coVerify(exactly = 0) { imageContentUseCase.unFavoriteContent(any()) }
+
+            testRule.dispatcher.scheduler.advanceUntilIdle()
+
+
+            assertEquals(testImage1.copy(favourite = true), viewModel.favouriteContents[0])
+        }
+
+
+
+    @Test
+    fun `toggleContentFavourite should call imageContentUseCase-unfavoriteContent when item is favourite`() =
+        runTest {
+            // Arrange
+            val favouriteImage = testImage1.copy(favourite = true)
+
+            coEvery { imageContentUseCase.getAllFavouriteContents() } returns flow { emit(listOf(favouriteImage)) }
+
+            // Act
+            viewModel.fetchFavouriteContents()
+
+            // Act
+            viewModel.toggleContentFavourite(favouriteImage)
+
+            // Verify the correct command was sent
+            coVerify(exactly = 1) { imageContentUseCase.unFavoriteContent(favouriteImage) }
+            coVerify(exactly = 0) { imageContentUseCase.favoriteContent(any()) }
+
+            testRule.dispatcher.scheduler.advanceUntilIdle()
+
+            assertEquals(testImage1.copy(favourite = false), viewModel.favouriteContents[0])
+        }
     @After
     @Throws(java.lang.Exception::class)
     fun tearDown() {
